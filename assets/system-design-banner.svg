@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">System Design: From First Principles</title>
+  <desc id="desc">A dark blue system map showing requirements flowing through APIs and data into a reliable system, surrounded by signals for scale, resilience, and observability.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#081426"/><stop offset="1" stop-color="#122D48"/></linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#49D8C8"/><stop offset="1" stop-color="#8AA7FF"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="360" rx="28" fill="url(#bg)"/>
+  <path d="M0 296 C230 226 338 348 567 278 S943 223 1200 287" fill="none" stroke="#24425F" stroke-width="2"/>
+  <path d="M0 316 C250 246 380 368 615 298 S970 245 1200 306" fill="none" stroke="#1A3651" stroke-width="2"/>
+  <g fill="none" stroke="url(#line)" stroke-width="3" opacity=".9">
+    <path d="M233 182H390"/><path d="M528 182H670"/><path d="M808 182H955"/>
+    <path d="M460 147V95H734V147"/><path d="M740 216V267H460V216"/>
+  </g>
+  <g filter="url(#glow)">
+    <circle cx="233" cy="182" r="8" fill="#49D8C8"/><circle cx="390" cy="182" r="8" fill="#49D8C8"/>
+    <circle cx="528" cy="182" r="8" fill="#7BC8E3"/><circle cx="670" cy="182" r="8" fill="#7BC8E3"/>
+    <circle cx="808" cy="182" r="8" fill="#8AA7FF"/><circle cx="955" cy="182" r="8" fill="#8AA7FF"/>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <text x="600" y="67" fill="#F5FAFF" font-size="35" font-weight="700" letter-spacing="2">SYSTEM DESIGN</text>
+    <text x="600" y="100" fill="#9EB6D0" font-size="16" letter-spacing="4">FROM FIRST PRINCIPLES</text>
+    <text x="310" y="168" fill="#DCEBFA" font-size="14" font-weight="600">REQUIREMENTS</text>
+    <text x="600" y="168" fill="#DCEBFA" font-size="14" font-weight="600">ARCHITECTURE</text>
+    <text x="882" y="168" fill="#DCEBFA" font-size="14" font-weight="600">RELIABILITY</text>
+    <text x="600" y="300" fill="#9EB6D0" font-size="13" letter-spacing="2">MEASURE  ·  MODEL  ·  DESIGN  ·  EVOLVE</text>
+    <text x="460" y="86" fill="#49D8C8" font-size="12">SCALE</text>
+    <text x="740" y="287" fill="#8AA7FF" font-size="12">OBSERVE</text>
+  </g>
+</svg>
