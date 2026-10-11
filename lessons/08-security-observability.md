@@ -55,6 +55,71 @@ Measure user-facing SLIs and supporting saturation signals. Alert on actionable 
 
 Data flow diagrams should include replicas, caches, search indexes, analytics exports, and backups. A deletion promise must specify when data is removed or rendered inaccessible in each store and what backup retention means. Minimize collected data and retention time; fewer sensitive copies means less exposure and simpler deletion.
 
+### 4.1 Threat modeling with STRIDE
+
+STRIDE is a brainstorming aid for threats at a trust boundary; it does not replace a domain-specific security review.
+
+| Threat category | Example in a file-sharing system | Design question |
+|---|---|---|
+| Spoofing | Attacker impersonates a user or service | How is identity verified, rotated, and scoped? |
+| Tampering | Client changes a file ID or event payload | Which component validates integrity and authorization? |
+| Repudiation | User denies a sensitive administrative action | Which minimal, protected audit record is retained? |
+| Information disclosure | Private file leaks through a CDN cache | Does cache keying and authorization match the object’s visibility? |
+| Denial of service | Large upload or expensive query exhausts resources | What size, rate, and concurrency limits apply? |
+| Elevation of privilege | Worker can access unrelated tenants’ records | Can service identity be restricted to only required actions? |
+
+Map threats to mitigations, owners, and residual risks. A control can introduce its own failure mode: strict rate limits can block legitimate users behind shared NAT; audit logs can become a sensitive data store.
+
+### 4.2 Identity and authorization flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant G as API gateway
+    participant A as Application
+    participant P as Policy / ownership check
+    participant D as Data store
+    U->>G: Request + access token
+    G->>G: Verify signature, issuer, audience, expiry
+    G->>A: Authenticated principal + request
+    A->>P: May principal access object 123?
+    P->>D: Check ownership / sharing policy
+    D-->>P: Decision inputs
+    P-->>A: Allow or deny
+    A->>D: Read only if authorized
+    A-->>U: Minimized response
+```
+
+Authentication at a gateway is useful but does not eliminate object-level authorization. Re-check permissions close to the operation using trusted principal identity. Be careful with time-of-check/time-of-use races when ownership can change between the check and the read/write.
+
+### 4.3 Metrics cardinality and useful labels
+
+Good metric dimensions are bounded: route template, status class, region, dependency, and deployment version. A raw URL, user ID, request ID, or arbitrary error string creates a new time series per value and can overwhelm storage. Put high-cardinality context in sampled traces or structured logs with access and retention controls.
+
+Useful starting RED signals (Rate, Errors, Duration) for each service and USE signals (Utilization, Saturation, Errors) for each resource:
+
+| View | Example metric | Question answered |
+|---|---|---|
+| User request | p50 / p95 / p99 latency by route | Which user path is slow? |
+| Correctness | success and conflict rate | Are valid operations completing? |
+| Capacity | CPU, memory, connection pool wait | Which resource is saturated? |
+| Async work | oldest event age, retry and dead-letter rate | Is delayed work falling behind? |
+| Dependency | timeout rate and latency by dependency | Which downstream is degrading? |
+
+### 4.4 Trace context across asynchronous boundaries
+
+Copy a trace/correlation context into event metadata when publishing, then start a consumer span linked to the producer context. A queue delay may be minutes or hours, so traces need sampling and retention policies; metrics should still represent aggregate lag. Never rely on a trace ID as an authorization secret.
+
+### 4.5 Incident workflow
+
+```text
+Detect user impact → establish scope → mitigate blast radius → restore correctness
+        ↓                 ↓                    ↓                    ↓
+ SLO / synthetic     region / route      shed or rollback       reconcile / replay
+```
+
+During an incident, distinguish mitigation from root-cause repair. Capture a timeline, communicate what users experience, and preserve evidence without copying secrets into tickets or chat. Afterward convert findings into a code, test, alert, runbook, or architectural change with an owner.
+
 ### Knowledge check
 
 1. Why should authorization include the requested resource, not merely the user identity?

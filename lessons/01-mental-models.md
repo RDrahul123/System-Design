@@ -54,6 +54,56 @@ Architecture decisions exchange one property for another. “X is better than Y�
 
 Local improvements can make a system worse end-to-end. A faster cache lookup does not help if a slow downstream dependency dominates. A high availability percentage for each component does not guarantee the whole request path meets its goal. Begin with the critical user action and include every dependency in its path.
 
+### 5.1 Request paths, fan-out, and the tail
+
+If a request must call dependencies **in series**, their latencies accumulate. If it calls independent dependencies in **parallel** and waits for all of them, the request latency is approximately the slowest branch, not the average branch. More branches make it increasingly likely that at least one is slow.
+
+```mermaid
+flowchart LR
+    subgraph Serial[Serial critical path: delays add]
+      S0[API] -->|40 ms| S1[Profile]
+      S1 -->|80 ms| S2[Policy]
+      S2 -->|120 ms| S3[Response]
+    end
+    subgraph Fanout[Parallel fan-out: wait for slowest required branch]
+      F0[API] --> F1[Profile · 40 ms]
+      F0 --> F2[Policy · 80 ms]
+      F0 --> F3[Inventory · 120 ms]
+      F1 --> F4[Join · ~120 ms]
+      F2 --> F4
+      F3 --> F4
+    end
+```
+
+This is why a “small” remote call is not free: it consumes a latency budget and creates another dependency that can time out. If a branch is optional, consider returning a partial result with a clear contract rather than making every user wait for it. Parallel fan-out also increases concurrency and can overload downstream services; set per-dependency limits.
+
+### 5.2 Utilization and queueing intuition
+
+As a shared resource approaches full utilization, there is less spare capacity to absorb bursts or slow requests. Queues form; waiting time can rise much faster than utilization. A system at 95% average CPU may have little headroom for a short burst, garbage collection, or a noisy neighbor. “Average load is below capacity” is not enough: request-size variation, synchronized arrivals, locks, and dependency waits matter.
+
+```text
+Relative wait
+  high |                                  ╭────
+       |                            ╭─────╯
+       |                     ╭──────╯
+       |             ╭───────╯
+   low |─────────────╯
+       +----------------------------------------> utilization
+        0%          50%        80%       100%
+```
+
+The curve is qualitative, not a universal equation. Use load tests and production measurements to find the safe operating region. Capacity headroom is a product choice: too little increases outage risk; too much may waste money.
+
+### 5.3 Availability of a dependency chain
+
+If one user action requires every independent component in a serial chain, a rough availability estimate is the product of component availabilities. Three required components each at 99.9% yield `0.999³ ≈ 99.70%` for the whole chain under simplifying independence assumptions. Correlated failures make the real result worse; optional branches, redundancy, retries, and graceful degradation change the model.
+
+The lesson is not to multiply arbitrary vendor uptime numbers. It is to identify which dependencies are truly required for the user action and where a fallback can preserve useful behavior.
+
+### 5.4 Feedback loops and control
+
+Architectures contain feedback loops: autoscaling observes load and starts capacity; retries react to errors; cache fill reacts to misses. A delayed or overly aggressive controller can oscillate. For example, retries increase load on a failing service, causing more timeouts and further retries—a positive feedback loop. Backoff, jitter, retry budgets, queue limits, and gradual scaling reduce this amplification.
+
 ### Knowledge check
 
 1. What does Little’s Law estimate, and what assumptions make the estimate useful?

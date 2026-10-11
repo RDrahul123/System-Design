@@ -42,8 +42,11 @@ flowchart LR
     G --> I[08 · Security & observability]
     H --> I
     I --> J[09 · Design interview method]
-    J --> K[Case studies]
-    K --> L[Capstone · Your design]
+    J --> K[10 · Storage systems]
+    K --> L[11 · Networking & edge]
+    L --> M[12 · Architecture evolution]
+    M --> N[Case studies]
+    N --> O[Capstone · Your design]
 ```
 
 Each lesson is self-contained and includes core concepts, diagrams, decision guidance, failure modes, and a knowledge check. The sequence matters: later architecture choices depend on earlier requirements and data guarantees.
@@ -52,9 +55,9 @@ Each lesson is self-contained and includes core concepts, diagrams, decision gui
 
 | Path | Follow | Outcome |
 |---|---|---|
-| **First pass** | 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 | A complete conceptual foundation |
+| **First pass** | 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 | A complete conceptual foundation |
 | **Interview sprint** | 01 → 02 → 03 → 04 → 05 → 09 → case studies | A repeatable, time-boxed design method |
-| **Backend engineer** | 02 → 03 → 04 → 05 → 06 → 07 → 08 | Practical architecture and operational fluency |
+| **Backend engineer** | 02 → 03 → 04 → 05 → 06 → 07 → 08 → 10 → 11 → 12 | Practical architecture and operational fluency |
 | **Build by doing** | Lessons → [labs](labs/README.md) → [case studies](case-studies/README.md) → capstone | A portfolio-ready written design |
 
 You do not need a specific cloud provider or framework. Basic programming, HTTP, and relational database familiarity help; unfamiliar terms are introduced as needed.
@@ -73,6 +76,9 @@ You do not need a specific cloud provider or framework. Basic programming, HTTP,
 | 07 | [Queues and event-driven architecture](lessons/07-queues-and-events.md) | Build asynchronous workflows with safe delivery and replay |
 | 08 | [Security and observability](lessons/08-security-observability.md) | Protect boundaries and make production behavior diagnosable |
 | 09 | [A repeatable design interview](lessons/09-design-interview.md) | Communicate a coherent design under time constraints |
+| 10 | [Storage systems and database selection](lessons/10-storage-systems.md) | Match data stores and indexes to access patterns and guarantees |
+| 11 | [Networking, DNS, and the edge](lessons/11-networking-and-edge.md) | Follow a request across DNS, TLS, proxies, and connection pools |
+| 12 | [Architecture evolution and migrations](lessons/12-architecture-evolution.md) | Evolve a system safely as teams, traffic, and constraints change |
 
 ### Case studies
 

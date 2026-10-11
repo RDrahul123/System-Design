@@ -81,6 +81,55 @@ Keep decimal (GB) versus binary (GiB) conventions consistent. Round early; preci
 
 For each operation record: average and peak requests/second, read/write mix, payload size, burst shape, geographic distribution, data growth, hot-key risk, and latency target. This profile guides the later architecture. It should be revisited whenever the product or traffic assumptions change.
 
+### 5.1 A complete first-pass capacity estimate
+
+Assume 10 million daily active readers, each requesting 30 feed pages per day. Suppose each response averages 80 KB and peak traffic is 5× the daily average.
+
+```text
+Reads/day       = 10M × 30 = 300M
+Average RPS     = 300M / 86,400 ≈ 3,470
+Peak RPS        = 3,470 × 5 ≈ 17,350
+Peak egress     = 17,350 × 80 KB ≈ 1.39 GB/s ≈ 11.1 Gbit/s
+```
+
+That is application payload alone: protocol overhead, TLS, retransmission, image assets, cache misses, and regional concentration add more. The estimate suggests a need to think about edge delivery, response size, regional capacity, and bandwidth—not a specific vendor or number of machines.
+
+Suppose each user creates 2 posts/day at 2 KB average metadata size:
+
+```text
+Posts/day                 = 10M × 2 = 20M
+Metadata writes/second    = 20M / 86,400 ≈ 231 average
+Raw metadata growth/year  = 20M × 2 KB × 365 ≈ 14.6 TB/year
+```
+
+Attachments are a separate workload. Store them in a blob/object system and keep references/metadata in the transactional data store. Replication, indexes, versions, tombstones, and backups multiply the physical storage requirement; estimate each separately.
+
+### 5.2 Sensitivity matters more than false precision
+
+Create a small range, not one magic answer:
+
+| Assumption | Low | Base | High |
+|---|---:|---:|---:|
+| Peak factor | 3× | 5× | 10× |
+| Feed response | 40 KB | 80 KB | 160 KB |
+| Peak egress at 17,350 RPS base | 0.56 GB/s | 1.39 GB/s | 2.78 GB/s |
+
+The high case can be a campaign, launch, or celebrity event. Ask which assumption changes the architecture: e.g., whether payloads can be cached at the edge, whether writes can be delayed, or whether one shard sees disproportionate load. Estimates should narrow questions, not pretend the future is known.
+
+### 5.3 Burst shape and concurrency
+
+The same total daily volume can arrive smoothly or in a sharp spike. A ten-minute launch burst can exhaust connection pools even when daily request averages look comfortable. Use a time series where possible: per-minute peak, burst duration, and recovery time. Queueable work may be smoothed; interactive work generally cannot be hidden indefinitely behind a queue.
+
+```mermaid
+xychart-beta
+    title "Illustrative requests per second over a day"
+    x-axis [00, 04, 08, 12, 16, 20, 24]
+    y-axis "requests/s" 0 --> 10000
+    line [900, 500, 2200, 5400, 6100, 9700, 3200]
+```
+
+If GitHub’s Mermaid renderer changes chart support, the intended takeaway is still visible: production demand varies over time; provision and test against a peak profile, not only a daily average.
+
 ### Knowledge check
 
 1. If reads are 80% of calls but writes are 95% of bytes, what additional detail is needed before choosing a storage strategy?

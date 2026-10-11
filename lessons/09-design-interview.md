@@ -65,4 +65,47 @@ Score each 0 (missing), 1 (partial), or 2 (clear and justified):
 
 The rubric is for practice, not a universal interviewer scorecard. Review the weakest area and redesign one part with a changed assumption.
 
-[Open the case studies →](../case-studies/README.md) · [Go to labs and capstone →](../labs/README.md)
+## Worked mini-example: ticket reservation
+
+Prompt: “Design a service that lets users reserve a seat for a limited-time event.” The key risk is overselling, not an enormous request rate. State assumptions: seat inventory is scarce; a hold lasts five minutes; payment can fail; users may retry after a timeout.
+
+```mermaid
+flowchart LR
+    U[Buyer] --> API[Reservation API]
+    API -->|atomic hold| DB[(Inventory + reservation state)]
+    API -->|reservation ID| U
+    DB -. hold-created event .-> Q[Expiry / payment workflow]
+    Q --> P[Payment provider]
+    P -->|confirmed / failed| W[Reservation worker]
+    W --> DB
+```
+
+The inventory store owns the invariant “at most one active hold for a seat.” Create the hold atomically with an expiration. Payment is an external side effect and cannot share a local database transaction; use a state machine such as `HELD → PAYMENT_PENDING → CONFIRMED` or `HELD → EXPIRED/RELEASED`. A delayed expiry job must verify the reservation is still in the expected state before releasing the seat.
+
+### State transitions and idempotency
+
+```mermaid
+stateDiagram-v2
+    [*] --> Available
+    Available --> Held: conditional claim
+    Held --> PaymentPending: payment requested
+    PaymentPending --> Confirmed: payment approved
+    PaymentPending --> Released: payment rejected / timeout policy
+    Held --> Released: hold expires
+    Released --> Available: inventory becomes claimable
+    Confirmed --> [*]
+```
+
+The payment provider call uses a stable idempotency key. If the API times out after the provider charged the card, query or retry with the same key rather than creating a second charge. The client’s reservation request also needs idempotency so the same user retry does not create multiple holds.
+
+### How to narrate the design
+
+1. “The invariant is no two confirmed reservations for one seat; I’ll enforce the claim with a conditional write/unique constraint.”
+2. “I’ll return a hold ID after durable reservation, not after payment settlement; the API contract exposes pending status.”
+3. “Payment is outside the database transaction, so I need a recoverable workflow and idempotent provider call.”
+4. “I’ll monitor expired holds, payment-pending age, and inventory mismatch; a reconciliation job compares payment and reservation states.”
+5. “If contention is high, I’ll measure per-event hot seats and database conflicts before distributing inventory across partitions.”
+
+This small example demonstrates that correctness requirements should determine the architecture before the scale estimate does. A queue is useful for expiry and payment follow-up, but it must not become the authority for whether a seat is still available.
+
+[Continue to Lesson 10 →](10-storage-systems.md) · [Go to labs and capstone →](../labs/README.md)

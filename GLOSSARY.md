@@ -27,3 +27,16 @@
 | **Hot key** | A key receiving disproportionate traffic | Evenly balanced total traffic rules out hot spots |
 | **Outbox** | Local transactional record of event intent, published asynchronously | It removes the need for consumer deduplication |
 | **Tail latency** | Slow end of a latency distribution, commonly p95/p99 | It can be fixed by lowering average alone |
+| **Backoff with jitter** | Increasing retry delay with random variation between clients | A fixed synchronized retry interval reduces load |
+| **Cache-aside** | Application checks cache, reads origin on miss, then populates cache | TTL by itself guarantees correctness |
+| **Circuit breaker** | Stops calls to a repeatedly failing dependency temporarily | It repairs the dependency or guarantees recovery |
+| **DNS TTL** | Duration resolvers may cache a DNS answer | A failover change reaches all clients instantly |
+| **Fencing token** | Monotonically increasing token that rejects writes from an obsolete owner | A timeout alone proves the old leader is dead |
+| **Hot partition** | Partition receiving disproportionate work due to key skew | Adding partitions automatically redistributes one hot key |
+| **Idempotency key** | Stable identifier used to recognize retries of one logical operation | It should be reused for different request bodies |
+| **Linearizability** | Reads/writes appear to occur in one real-time-respecting order within a defined scope | Every database operation needs global linearizability |
+| **Modular monolith** | One deployable application with explicit internal module boundaries | A monolith must be an unstructured codebase |
+| **Object storage** | Service for large blob/file objects addressed by keys and metadata | It offers relational transactions and joins over file contents |
+| **Quorum** | Configured subset of replicas whose responses satisfy an operation rule | Any majority guarantees every desired consistency property |
+| **Tombstone** | Marker that records deletion so delayed replicas/events do not resurrect data | Removing one primary row deletes every copy immediately |
+| **Write amplification** | Physical writes caused by one logical write (indexes, replicas, projections) | API write count equals storage write work |

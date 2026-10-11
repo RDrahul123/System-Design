@@ -46,6 +46,48 @@ In an asynchronous network, a partition can prevent nodes from learning whether 
 
 End-to-end exactly-once effects are difficult because a sender may not know whether a receiver committed before a connection failed. Common practical design: at-least-once delivery plus idempotent processing, deduplication keys, and transactional state/outbox boundaries. Be precise about the effect guaranteed and the scope of the transaction.
 
+### 6.1 Consistency is a user-visible contract
+
+| Guarantee | Meaning | Example use |
+|---|---|---|
+| Strong / linearizable read | A read behaves as if it occurred atomically after the latest completed write in the defined scope | Check whether a scarce resource is still available |
+| Read-your-writes | A client that wrote a value can subsequently observe that value | Show a newly edited profile to its owner |
+| Monotonic reads | A client does not move backward to an older version after seeing a newer one | Avoid a feed appearing to “unsee” a recent item |
+| Eventual convergence | Replicas converge if updates stop and communication/recovery succeeds | Approximate public counters or derived search data |
+
+These guarantees can be scoped per key, entity, partition, session, or transaction. A system can offer strong writes on a primary and stale-tolerant reads from replicas; it can offer read-your-writes through session routing without making every global read linearizable. Ask what the user notices, not only what the database advertises.
+
+### 6.2 A more precise view of CAP
+
+During a network partition, two groups of nodes cannot communicate reliably. For a given operation, a service cannot always both accept conflicting updates independently on both sides and guarantee every response reflects one single real-time order. It must define which operations reject/block and which may accept work that later needs reconciliation. CAP is specifically about behavior under partition, not a blanket ranking of “CP databases” versus “AP databases.”
+
+```mermaid
+flowchart TD
+    P[Network partition occurs] --> Q{Can this operation safely proceed without remote coordination?}
+    Q -->|No; invariant must hold now| R[Reject / wait / route to authority]
+    Q -->|Yes; merge or tolerate temporary divergence| A[Accept locally and reconcile]
+    R --> C[Preserve single agreed state; availability is reduced]
+    A --> V[Remain responsive; clients may see divergent versions temporarily]
+```
+
+The decision may differ by feature: a collaborative draft can accept concurrent edits, while a single-use coupon redemption may reject when it cannot check authoritative state.
+
+### 6.3 Leader-based and multi-leader writes
+
+A single leader simplifies ordering and conflict handling but creates a failover and capacity concern. Multi-leader writes improve regional autonomy, yet concurrent changes can conflict. Conflict policies—last-writer-wins, field merge, CRDT operation, or user resolution—have different semantics. Timestamps alone are dangerous for conflict resolution when clocks drift; use explicit versions, causal metadata, or a domain-specific merge rule.
+
+### 6.4 Partitioning details: hash, range, and virtual shards
+
+- **Hash partitioning** spreads uniformly distributed keys, but range queries cross partitions.
+- **Range partitioning** makes ordered scans local, but monotonically increasing keys can overload the newest range.
+- **Virtual shards** map many logical buckets onto fewer physical nodes, making gradual movement easier than moving one huge partition at once.
+
+Resharding is a data migration, not merely a routing config change. Define who owns a key during transition, how in-flight writes are routed, how data is copied and verified, when reads switch, and how rollback works. Dual-writing without a source-of-truth rule can create permanent divergence.
+
+### 6.5 Failure detection is suspicion
+
+A timeout cannot distinguish a crashed server from a slow network or a long pause. Distributed systems therefore use failure detectors that express suspicion, then protocols (leases, epochs/terms, quorum votes) prevent two nodes from both acting as current leader. Fencing tokens or monotonically increasing epochs can stop a former leader from writing after a replacement takes over.
+
 ### Knowledge check
 
 1. Does a request timeout prove that a write failed?

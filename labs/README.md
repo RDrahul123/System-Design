@@ -14,6 +14,10 @@ These exercises are deliberately open-ended. Write assumptions before choosing c
 | 4 · Find the bottleneck | A service has low average CPU but p99 latency spikes during a campaign. List evidence to collect before changing architecture. | Diagnostic decision tree |
 | 5 · Failure walk | Trace behavior if database commits but event publish times out. | Sequence diagram with recovery |
 | 6 · Evolve a design | Take the URL shortener and add custom domains, deletion, and regional failover. | Updated diagram and trade-off log |
+| 7 · Select storage | Model a photo product with metadata, originals, thumbnails, search, and analytics. Pick the source of truth and derived stores. | Data-flow diagram, access-pattern table, deletion path |
+| 8 · Design the edge | Trace a private media download through DNS, CDN, authorization, and object storage. | Request sequence with cache-key and expiry rules |
+| 9 · Migrate without downtime | Rename a heavily used database field while old and new application versions run simultaneously. | Expand–migrate–contract rollout and rollback plan |
+| 10 · Recover from a regional outage | One region is unavailable while writes are in flight. Define failover, user behavior, and failback. | RPO/RTO, authority diagram, game-day checklist |
 
 ## Capstone: design a collaborative document service
 
@@ -34,6 +38,10 @@ Design a service where multiple users can edit documents, share access, and reco
 - [ ] Observability: SLI, alert, and capacity signal
 - [ ] Two trade-offs and one alternative design
 - [ ] Migration or rollout plan for one major change
+- [ ] Storage selection justified by access patterns and lifecycle
+- [ ] Network boundaries, connection budgets, and edge cache behavior
+- [ ] Failure-domain assumptions and a rehearsable recovery sequence
+- [ ] Cost and operational ownership for each major component
 
 ## Suggested capstone review questions
 
@@ -42,5 +50,8 @@ Design a service where multiple users can edit documents, share access, and reco
 3. Which version is authoritative after a reconnect or region failover?
 4. Can a document be restored without restoring unrelated account data?
 5. What changes if a document grows to hundreds of megabytes?
+6. What is the source of truth for edits, search results, and version history?
+7. How do schema migration and live application rollout remain compatible?
+8. How does a client discover a region failover without losing or duplicating edits?
 
 Use the [design review template](../templates/design-review.md) as your starting document. Share diagrams and assumptions in a pull request if you want feedback from course contributors.

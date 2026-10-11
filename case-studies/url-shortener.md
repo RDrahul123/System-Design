@@ -77,3 +77,58 @@ For alphabet size 62 and code length 7, the namespace is `62⁷ ≈ 3.5 trillion
 Namespace codes by domain/tenant where required; version or actively invalidate mapping cache entries; coalesce hot-key lookups and use replicated cache reads; track redirect latency/error rate by region and cache-hit tier without unbounded user-level metric labels.
 
 </details>
+
+## 7. Work through the redirect hot path
+
+The redirect path is the product’s critical path; creation is far less frequent. Keep it small and predictable:
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant E as Edge / rate limit
+    participant H as Redirect handler
+    participant K as Cache
+    participant D as Mapping store
+    participant Q as Click-event stream
+    B->>E: GET /aB92xQp
+    E->>H: Forward request
+    H->>K: Lookup code
+    alt Cache hit and link active
+      K-->>H: Destination + expiry/version
+    else Cache miss
+      H->>D: Lookup code
+      D-->>H: Destination + expiry/version
+      H->>K: Cache bounded-lifetime mapping
+    end
+    H-->>B: Redirect with chosen status
+    H-->>Q: Enqueue click metadata asynchronously
+```
+
+Unknown, expired, disabled, and malformed codes need defined behavior. Avoid making analytics availability part of redirect availability. Do not include sensitive query parameters in click events unless they are needed and consented; strip or redact tracking secrets.
+
+## 8. Code-space and collision math
+
+With 62 URL-safe alphanumeric symbols and seven characters, the space is:
+
+```text
+N = 62^7 = 3,521,614,606,208 possible codes
+```
+
+If codes are uniformly random, the expected number of colliding pairs after issuing `n` codes is approximately `n(n−1)/(2N)` when `n` is much smaller than `N`. This birthday approximation shows why “the space is huge” does not remove the need for collision handling at scale. Enforce uniqueness in storage and retry a bounded number of fresh candidates. If retries are exhausted, fail creation clearly and alert; do not return an unverified code.
+
+Sequential IDs encoded as base62 avoid random collision but reveal approximate creation order/volume and can be guessed. Random entropy reduces enumeration but does not replace rate limits, abuse checks, or authorization for link-management operations.
+
+## 9. Consistency and cache invalidation
+
+Suppose an owner disables a malicious link. If the redirect cache uses a 10-minute TTL, users could continue to be redirected for up to that stale window. Options include actively invalidating all relevant cache layers, versioning the mapping and checking state at a small authoritative tier, or using a short TTL. The correct choice follows the abuse-response requirement and cache-control behavior: browsers and intermediary caches can outlive the application cache.
+
+| State change | Correctness concern | Possible mechanism |
+|---|---|---|
+| Link disabled | Old redirect remains available | Invalidation/version check/short TTL |
+| Destination updated | Browser has cached old redirect | Temporary redirect and conservative cache headers |
+| Link expires | Clock skew and delayed cleanup | Check expiry on read using trusted time; cleanup is secondary |
+| Abuse report arrives | Competing disable operations | Idempotent state transition + audit record |
+
+## 10. Operational signals
+
+Measure redirect p50/p95/p99 by region, status code and cache-hit class; mapping-store latency and saturation; hot-key request distribution; expired/disabled link hit count; creation collision retries; and analytics queue age. Keep labels bounded—do not use the raw short code as a metric label. Sample or aggregate click analytics independently.

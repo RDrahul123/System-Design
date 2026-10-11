@@ -84,6 +84,71 @@ Define key scope, retention, conflict behavior when the same key is reused with 
 
 Prefer additive changes first: add an optional field, deploy readers that tolerate it, then write it. For removals or renames, support both forms during a migration. A safe rollout often has expand → migrate → contract phases. Keep clients backward-compatible where old versions remain active; database migration safety is part of API design.
 
+### 5.1 Design indexes from queries
+
+Suppose the common query is “list the newest posts by one author”:
+
+```sql
+SELECT post_id, created_at, body
+FROM posts
+WHERE author_id = ?
+ORDER BY created_at DESC
+LIMIT 50;
+```
+
+An index beginning with `(author_id, created_at DESC)` can locate one author’s range and return rows in the desired order. An index only on `created_at` may scan many unrelated authors. Composite-index order matters: a B-tree on `(tenant_id, created_at)` is generally useful for filtering by tenant and time, but not necessarily for a query filtering only by `created_at`.
+
+Every index has write amplification: insert/update operations maintain it, it consumes memory and disk, and extra indexes can make a write-heavy workload slower. Verify the actual query plan and data distribution. An index does not fix an inefficient access pattern if the query still reads most of the table.
+
+### 5.2 Transactions protect invariants
+
+Consider reserving the final seat. A naïve read-then-write can overbook:
+
+```mermaid
+sequenceDiagram
+    participant A as Request A
+    participant DB as Inventory database
+    participant B as Request B
+    A->>DB: Read seats_available = 1
+    B->>DB: Read seats_available = 1
+    A->>DB: Write reservation A
+    B->>DB: Write reservation B
+    Note over A,B: Both think they acquired the final seat
+```
+
+Enforce the invariant in the authoritative store with an atomic conditional update, serializable transaction, or unique constraint, depending on the data model:
+
+```sql
+UPDATE inventory
+SET seats_available = seats_available - 1
+WHERE event_id = ? AND seats_available > 0;
+```
+
+The caller succeeds only if exactly one row was updated. This protects one inventory row’s invariant; a multi-item cart, payment authorization, and external ticket provider span multiple systems and require a broader workflow (often a saga with compensating actions). Transactions do not make external side effects atomic.
+
+### 5.3 Isolation and anomalies
+
+Transactions provide atomicity, but the isolation level determines which concurrent observations are allowed. A weak isolation level may permit non-repeatable reads or write skew. Stronger isolation can reduce anomalies but may increase contention, retries, or aborts. State the invariant first, then choose the lightest mechanism that reliably enforces it; validate the database’s actual semantics rather than assuming all products interpret isolation labels identically.
+
+### 5.4 Cursor pagination example
+
+For a descending `(created_at, post_id)` order, a cursor can encode the last returned pair. The next page asks for rows lexicographically older than that pair:
+
+```sql
+SELECT post_id, created_at, body
+FROM posts
+WHERE author_id = ?
+  AND (created_at, post_id) < (?, ?)
+ORDER BY created_at DESC, post_id DESC
+LIMIT 50;
+```
+
+The unique tie-breaker prevents ambiguous order for equal timestamps. Opaque cursors should be signed or otherwise validated, bound to the query/filter context, and versioned if the format may change. Cursor pagination avoids scanning increasingly large offsets, but does not automatically provide a frozen snapshot while records are changing.
+
+### 5.5 API error semantics
+
+Clients need to distinguish validation errors, authentication/authorization failures, conflicts, rate limits, transient server failures, and ambiguous timeouts. Return stable machine-readable error codes; do not expose stack traces or internal secrets. A `429` should usually include retry guidance; a `409` can communicate a state conflict; a `5xx` may be retryable only when the operation is idempotent or carries a deduplication key.
+
 ### Knowledge check
 
 1. What exact problem does an idempotency key solve, and what does it not solve?
