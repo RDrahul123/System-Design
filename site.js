@@ -27,6 +27,7 @@
     { id: 'rate-limiter', title: 'Distributed rate limiter', icon: '◴', summary: 'Token buckets, quotas, distributed counters, and outage policy.', tags: 'rate limit token bucket sliding window quota throttling' },
     { id: 'web-crawler', title: 'Web crawler', icon: '⌕', summary: 'Frontier scheduling, politeness, deduplication, and safe fetching.', tags: 'google crawler robots txt web search frontier deduplication indexing' },
   ];
+  const courseIntroVideo = 'https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing';
 
   const routeSpecs = [
     ...lessons.map(item => ({ type: 'lesson', id: item.id, title: `${item.number} · ${item.title}`, description: item.summary, tags: item.tags, path: `lessons/${item.id}.md` })),
@@ -325,10 +326,17 @@
           <div class="hero-kicker"><span></span> A visual, open-source course</div>
           <h1 class="hero-title">Design systems<br />that <span class="accent">make sense.</span></h1>
           <p class="hero-intro">Go from first principles to production trade-offs. Learn to reason about scale, data, and failure—with diagrams that show how the pieces connect.</p>
-          <div class="hero-actions"><a class="button-primary" href="${routeHref('lesson', '00-course-orientation')}" data-route="lesson:00-course-orientation">Start learning <span aria-hidden="true">→</span></a><a class="button-secondary" href="${routeHref('page', 'labs')}" data-route="page:labs">Explore practice labs</a></div>
+          <div class="hero-actions"><a class="button-primary" href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer">Watch course introduction <span aria-hidden="true">↗</span></a><a class="button-secondary" href="${routeHref('lesson', '00-course-orientation')}" data-route="lesson:00-course-orientation">Start Lesson 00</a></div>
         <div class="hero-stats"><div class="hero-stat"><strong>12</strong><span>guided lessons</span></div><div class="hero-stat"><strong>40+</strong><span>visual diagrams</span></div><div class="hero-stat"><strong>8</strong><span>worked case studies</span></div><div class="hero-stat"><strong>Free</strong><span>and open-source</span></div></div>
         </div>
         <div class="hero-art" aria-hidden="true"><img src="./assets/hero-architecture.svg" alt="" /></div>
+      </section>
+
+      <section class="intro-video-card" aria-label="Course introduction video">
+        <a class="intro-video-visual" href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer" aria-label="Watch System Design From First Principles — A Learner’s Roadmap in Google Vids">
+          <span class="video-grid-art" aria-hidden="true"></span><span class="video-eyebrow">THE COURSE ROADMAP</span><span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 10 6-10 6z"/></svg></span><span class="video-link-label">PLAY INTRODUCTION <span>↗</span></span>
+        </a>
+        <div class="intro-video-copy"><span class="section-overline">Start here · course introduction</span><h2>See the learning path before you begin.</h2><p>A short roadmap to the course: what system design means, how the lessons fit together, and how to get the most from the examples.</p><a href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer">Watch “A Learner’s Roadmap” in Google Vids <span>↗</span></a></div>
       </section>
 
       <section class="section-block" aria-labelledby="curriculum-title">

@@ -2,6 +2,10 @@
 
 [← Course home](../README.md) · [Next: Mental models →](01-mental-models.md)
 
+## Start here: course introduction
+
+Before the first lesson, watch the short course roadmap: **[System Design From First Principles — A Learner’s Roadmap ▶](https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing)**. It introduces the course and how to approach the learning path. The video opens in Google Vids in a new tab.
+
 ## What “system design” means here
 
 A **system** is a set of components and people that cooperate to deliver behavior. **Design** is deciding how responsibilities, data, and failure handling are arranged under constraints. The goal is not to draw the largest diagram. It is to make a design that meets the required behavior with a cost, complexity, and risk that are acceptable.

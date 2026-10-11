@@ -24,6 +24,8 @@ System design is the practice of turning a problem and its constraints into an a
 
 This course builds those skills progressively: first learn the vocabulary and reasoning tools, then design storage, APIs, and distributed workflows, and finally apply them in complete case studies.
 
+**Start with the [course introduction video](https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing),** then continue to [Lesson 00](lessons/00-course-orientation.md) for the roadmap and learning paths.
+
 > **Guiding loop**
 >
 > `Understand → Quantify → Model → Design → Stress → Refine`
