@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="320" viewBox="0 0 420 320" role="img" aria-labelledby="title desc">
+  <title id="title">System design architecture illustration</title>
+  <desc id="desc">A client request flows through an edge gateway to an application, which connects to persistent storage, a cache, and asynchronous workers.</desc>
+  <defs>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#183138"/><stop offset="1" stop-color="#111e2b"/></linearGradient>
+    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#68e6d1"/><stop offset="1" stop-color="#a7b5ff"/></linearGradient>
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#68dcca"/></marker>
+  </defs>
+  <g fill="none" stroke="url(#stroke)" stroke-width="2" opacity=".8" marker-end="url(#arrow)">
+    <path d="M89 155H142"/><path d="M223 155H275"/><path d="M323 139V86"/><path d="M323 172V229"/>
+  </g>
+  <g filter="url(#softGlow)" fill="#7ce6d3">
+    <circle cx="115" cy="155" r="3"/><circle cx="250" cy="155" r="3"/><circle cx="323" cy="111" r="3"/><circle cx="323" cy="205" r="3"/>
+  </g>
+  <g font-family="DM Sans,Segoe UI,Arial,sans-serif" text-anchor="middle">
+    <rect x="18" y="127" width="72" height="56" rx="13" fill="url(#node)" stroke="#4c7380"/>
+    <circle cx="54" cy="145" r="5" fill="#92adff"/><path d="M44 162c2-9 18-9 20 0" fill="none" stroke="#92adff" stroke-width="2" stroke-linecap="round"/>
+    <text x="54" y="176" fill="#b7c8d2" font-size="8">CLIENT</text>
+    <rect x="143" y="127" width="82" height="56" rx="13" fill="url(#node)" stroke="#438e84"/>
+    <path d="M165 144h38M165 151h38M165 158h25" stroke="#6be0cc" stroke-linecap="round" stroke-width="2"/>
+    <text x="184" y="176" fill="#b7c8d2" font-size="8">APPLICATION</text>
+    <rect x="276" y="127" width="96" height="56" rx="13" fill="url(#node)" stroke="#438e84"/>
+    <circle cx="296" cy="151" r="6" fill="none" stroke="#6be0cc" stroke-width="2"/><circle cx="352" cy="151" r="6" fill="none" stroke="#6be0cc" stroke-width="2"/>
+    <path d="M302 151h44" stroke="#6be0cc" stroke-width="2"/>
+    <text x="324" y="176" fill="#b7c8d2" font-size="8">DATA LAYER</text>
+    <rect x="287" y="39" width="73" height="46" rx="12" fill="url(#node)" stroke="#8b79bb"/>
+    <path d="M306 59h35M306 65h24" stroke="#cfb4ff" stroke-linecap="round" stroke-width="2"/>
+    <text x="324" y="78" fill="#c6b9dc" font-size="7">CACHE</text>
+    <rect x="287" y="229" width="73" height="46" rx="12" fill="url(#node)" stroke="#8b79bb"/>
+    <path d="M306 246h35M306 252h24" stroke="#cfb4ff" stroke-linecap="round" stroke-width="2"/>
+    <text x="324" y="268" fill="#c6b9dc" font-size="7">ASYNC</text>
+    <circle cx="46" cy="59" r="2" fill="#65e0cd" opacity=".55"/><circle cx="382" cy="103" r="2" fill="#9eadff" opacity=".65"/><circle cx="240" cy="259" r="2" fill="#65e0cd" opacity=".5"/>
+    <path d="M52 78v-9m0 0-4 4m4-4 4 4M382 121v-9m0 0-4 4m4-4 4 4M240 241v-9m0 0-4 4m4-4 4 4" stroke="#80a9b5" stroke-width="1.2" opacity=".65"/>
+  </g>
+</svg>

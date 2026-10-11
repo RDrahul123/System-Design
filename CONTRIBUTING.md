@@ -10,6 +10,7 @@ Thanks for helping make system design easier to learn. Useful contributions incl
 4. **Make diagrams accessible.** Add a short textual explanation; SVGs should have a title and description.
 5. **Keep learning progressive.** Define a term before relying on it in a later lesson.
 6. **Use illustrative numbers honestly.** Label assumptions and avoid implying they are measured facts.
+7. **Keep the course site dark-only and mobile-first.** Check navigation, tables, code, and diagrams at narrow widths; do not add a light-theme toggle.
 
 ## Pull request workflow
 
@@ -17,7 +18,8 @@ Thanks for helping make system design easier to learn. Useful contributions incl
 2. Make the smallest change that fully addresses the issue.
 3. Check local links and Mermaid code fences in the changed Markdown.
 4. Preview the rendered Markdown and confirm the diagram has a useful text explanation.
-5. Describe the learning outcome and any assumptions in the pull request.
+5. If changing the website, check desktop and phone widths and verify query-string navigation on a subpath deployment.
+6. Describe the learning outcome and any assumptions in the pull request.
 
 ## New lesson checklist
 

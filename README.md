@@ -117,6 +117,10 @@ flowchart LR
 
 This is a vocabulary map, **not** a recommended default architecture. A small application may need only a client, an application process, and one database. Every additional component adds operational cost and another way to fail; introduce it to solve a demonstrated requirement.
 
+## Interactive course website
+
+Open the responsive, dark-only course website at the repository root by deploying `index.html`. It includes searchable lessons, mobile navigation, Mermaid diagrams, and browser-local reading progress. See [`DEPLOYMENT.md`](DEPLOYMENT.md) for GitHub Pages, Netlify, Vercel, and local preview instructions. GitHub Pages deployment is automated through the `Deploy course website` workflow; select **GitHub Actions** as the Pages source in repository settings.
+
 ## Design notebook
 
 For every exercise, capture the design in this order:
@@ -137,11 +141,16 @@ Copy the detailed [design review template](templates/design-review.md) for a new
 ```text
 System-Design/
 ├── README.md                 # Course home and navigation
+├── index.html                # Responsive, dark-only course website
+├── site.css / site.js        # Website layout, navigation, search, and rendering
 ├── lessons/                  # Progressive, concept-first course modules
 ├── case-studies/             # Worked end-to-end system designs
 ├── labs/                     # Exercises, prompts, and capstone
 ├── templates/                # Reusable design review notebook
 ├── assets/                   # Original SVG artwork and visual reference
+├── .github/workflows/         # GitHub Pages deployment
+├── DEPLOYMENT.md              # GitHub Pages, Netlify, Vercel, local preview
+├── netlify.toml / vercel.json # Static-host configuration
 ├── GLOSSARY.md               # Shared vocabulary
 ├── CONTRIBUTING.md           # How to improve the course
 └── LICENSE                   # MIT
