@@ -21,11 +21,17 @@
     { id: 'url-shortener', title: 'URL shortener', icon: '↗', summary: 'Key generation, redirects, hot keys, abuse, and cache behavior.', tags: 'short url redirect hash id generation cache' },
     { id: 'news-feed', title: 'News feed', icon: '▤', summary: 'Fan-out strategies, ranking, freshness, and privacy checks.', tags: 'feed social fanout ranking celebrity' },
     { id: 'real-time-chat', title: 'Real-time chat', icon: '◌', summary: 'Conversation ordering, delivery states, presence, and reconnects.', tags: 'chat websocket message delivery realtime' },
+    { id: 'video-streaming', title: 'Video streaming', icon: '▷', summary: 'Ingest, transcode, adapt quality, and serve video through CDNs.', tags: 'video netflix youtube streaming transcoding adaptive bitrate cdn' },
+    { id: 'ride-hailing', title: 'Ride-hailing match', icon: '⌖', summary: 'Geospatial search, driver freshness, dispatch, and exclusive matching.', tags: 'uber ride driver location geo geohash dispatch' },
+    { id: 'file-sync', title: 'Cloud file sync', icon: '↔', summary: 'Chunked transfers, offline changes, sharing, and version conflicts.', tags: 'dropbox drive file storage sync chunks offline conflict' },
+    { id: 'rate-limiter', title: 'Distributed rate limiter', icon: '◴', summary: 'Token buckets, quotas, distributed counters, and outage policy.', tags: 'rate limit token bucket sliding window quota throttling' },
+    { id: 'web-crawler', title: 'Web crawler', icon: '⌕', summary: 'Frontier scheduling, politeness, deduplication, and safe fetching.', tags: 'google crawler robots txt web search frontier deduplication indexing' },
   ];
 
   const routeSpecs = [
     ...lessons.map(item => ({ type: 'lesson', id: item.id, title: `${item.number} · ${item.title}`, description: item.summary, tags: item.tags, path: `lessons/${item.id}.md` })),
     ...caseStudies.map(item => ({ type: 'case', id: item.id, title: item.title, description: item.summary, tags: item.tags, path: `case-studies/${item.id}.md` })),
+    { type: 'page', id: 'questions', title: 'System design interview question bank', description: 'Publicly reported company-oriented prompts, canonical problems, and interviewer follow-ups.', tags: 'google meta amazon netflix uber dropbox microsoft interview question faang prompt', path: 'INTERVIEW_QUESTION_BANK.md' },
     { type: 'page', id: 'labs', title: 'Practice labs & capstone', description: 'Ten progressive exercises and a complete design challenge.', tags: 'practice exercise capstone project', path: 'labs/README.md' },
     { type: 'page', id: 'glossary', title: 'System design glossary', description: 'Concise definitions and common misconceptions.', tags: 'terms definitions vocabulary', path: 'GLOSSARY.md' },
     { type: 'page', id: 'template', title: 'Design review template', description: 'A structured notebook for your next system design.', tags: 'template worksheet design review', path: 'templates/design-review.md' },
@@ -246,6 +252,7 @@
     if (clean === 'case-studies/README.md') return { type: 'page', id: 'case-studies' };
     if (clean === 'labs/README.md') return { type: 'page', id: 'labs' };
     if (clean === 'GLOSSARY.md') return { type: 'page', id: 'glossary' };
+    if (clean === 'INTERVIEW_QUESTION_BANK.md') return { type: 'page', id: 'questions' };
     if (clean === 'templates/design-review.md') return { type: 'page', id: 'template' };
     if (/^(?:CONTRIBUTING|LICENSE)\.md?$/.test(clean)) return { type: 'document', id: clean };
     return null;
@@ -319,7 +326,7 @@
           <h1 class="hero-title">Design systems<br />that <span class="accent">make sense.</span></h1>
           <p class="hero-intro">Go from first principles to production trade-offs. Learn to reason about scale, data, and failure—with diagrams that show how the pieces connect.</p>
           <div class="hero-actions"><a class="button-primary" href="${routeHref('lesson', '00-course-orientation')}" data-route="lesson:00-course-orientation">Start learning <span aria-hidden="true">→</span></a><a class="button-secondary" href="${routeHref('page', 'labs')}" data-route="page:labs">Explore practice labs</a></div>
-          <div class="hero-stats"><div class="hero-stat"><strong>12</strong><span>guided lessons</span></div><div class="hero-stat"><strong>40+</strong><span>visual diagrams</span></div><div class="hero-stat"><strong>3</strong><span>worked case studies</span></div><div class="hero-stat"><strong>Free</strong><span>and open-source</span></div></div>
+        <div class="hero-stats"><div class="hero-stat"><strong>12</strong><span>guided lessons</span></div><div class="hero-stat"><strong>40+</strong><span>visual diagrams</span></div><div class="hero-stat"><strong>8</strong><span>worked case studies</span></div><div class="hero-stat"><strong>Free</strong><span>and open-source</span></div></div>
         </div>
         <div class="hero-art" aria-hidden="true"><img src="./assets/hero-architecture.svg" alt="" /></div>
       </section>
@@ -330,9 +337,11 @@
       </section>
 
       <section class="section-block" aria-labelledby="case-title">
-        <div class="section-heading"><div><span class="section-overline">Learn by taking systems apart</span><h2 id="case-title">Three end-to-end designs</h2><p>Study the path from requirements through failure handling.</p></div><a class="text-link" href="${routeHref('page', 'case-studies')}" data-route="page:case-studies">All case studies <span>↗</span></a></div>
+        <div class="section-heading"><div><span class="section-overline">Learn by taking systems apart</span><h2 id="case-title">Eight end-to-end designs</h2><p>Practice product, infrastructure, real-time, and data-intensive systems.</p></div><a class="text-link" href="${routeHref('page', 'case-studies')}" data-route="page:case-studies">All case studies <span>↗</span></a></div>
         <div class="case-grid">${caseStudies.map(item => `<a class="case-card" href="${routeHref('case', item.id)}" data-route="case:${item.id}"><span class="case-icon" aria-hidden="true">${item.icon}</span><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.summary)}</p><span class="case-open"><span>WORKED DESIGN</span><span>Read case →</span></span></a>`).join('')}</div>
       </section>
+
+      <section class="section-block"><div class="study-banner"><div><h3>Preparing for a system design interview?</h3><p>Browse canonical prompts, public company-associated examples, the concepts each tests, and 20 high-signal follow-up questions.</p></div><a class="button-primary" href="${routeHref('page', 'questions')}" data-route="page:questions">Open question bank <span>→</span></a></div></section>
 
       <section class="section-block">
         <div class="study-banner"><div><h3>Turn concepts into design practice</h3><p>Work through progressive exercises, then design a collaborative document system using the course’s reusable review template.</p></div><a class="button-primary" href="${routeHref('page', 'labs')}" data-route="page:labs">Open labs <span>→</span></a></div>
@@ -352,7 +361,8 @@
     glossary: { title: 'System design glossary', path: 'GLOSSARY.md', description: 'A shared vocabulary for the trade-offs, guarantees, and failure modes in this course.' },
     template: { title: 'Design review template', path: 'templates/design-review.md', description: 'A reusable notebook for requirements, workload, architecture, decisions, and risks.' },
     contributing: { title: 'Contributing guide', path: 'CONTRIBUTING.md', description: 'Help improve this open, vendor-neutral course.' },
-    'case-studies': { title: 'Worked system design case studies', path: 'case-studies/README.md', description: 'Compare the architecture choices across a URL shortener, news feed, and real-time chat system.' },
+    'case-studies': { title: 'Worked system design case studies', path: 'case-studies/README.md', description: 'Compare eight architecture walkthroughs across product, infrastructure, media, marketplace, and storage systems.' },
+    questions: { title: 'System design interview question bank', path: 'INTERVIEW_QUESTION_BANK.md', description: 'Practice canonical prompts and company-associated examples from public interview-preparation material, with attribution caveats and follow-up questions.' },
   };
 
   async function renderSupport(id) {

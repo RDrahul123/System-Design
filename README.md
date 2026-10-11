@@ -87,6 +87,13 @@ You do not need a specific cloud provider or framework. Basic programming, HTTP,
 | URL shortener | Key generation, redirects, hot keys, abuse | [Design a URL shortener](case-studies/url-shortener.md) |
 | News feed | Fan-out, ranking, freshness, celebrity accounts | [Design a news feed](case-studies/news-feed.md) |
 | Real-time chat | Ordering, presence, delivery, reconnects | [Design real-time chat](case-studies/real-time-chat.md) |
+| Video streaming | Transcoding, adaptive bitrate, CDN, release spikes | [Design video streaming](case-studies/video-streaming.md) |
+| Ride hailing | Geospatial search, dispatch, atomic matching | [Design ride matching](case-studies/ride-hailing.md) |
+| File synchronization | Chunked uploads, offline changes, conflicts | [Design file sync](case-studies/file-sync.md) |
+| Rate limiter | Token buckets, distributed quotas, fail-open/closed | [Design a rate limiter](case-studies/rate-limiter.md) |
+| Web crawler | Frontier scheduling, deduplication, politeness, safe fetching | [Design a web crawler](case-studies/web-crawler.md) |
+
+Practice the [company-oriented system design question bank](INTERVIEW_QUESTION_BANK.md), with sourced public prompt examples and a reusable interviewer follow-up list. Company associations are qualified examples, not promises about what any employer currently asks.
 
 ## How to study a lesson
 
@@ -145,6 +152,7 @@ System-Design/
 ├── site.css / site.js        # Website layout, navigation, search, and rendering
 ├── lessons/                  # Progressive, concept-first course modules
 ├── case-studies/             # Worked end-to-end system designs
+├── INTERVIEW_QUESTION_BANK.md # Publicly sourced prompts and practice follow-ups
 ├── labs/                     # Exercises, prompts, and capstone
 ├── templates/                # Reusable design review notebook
 ├── assets/                   # Original SVG artwork and visual reference
