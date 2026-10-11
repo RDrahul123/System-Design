@@ -134,15 +134,12 @@ kbd { padding: 2px 5px; border: 1px solid #273747; border-radius: 4px; color: #7
 .hero-stat strong { color: #e6f0f1; font-family: var(--display); font-size: 15px; }
 .hero-stat span { color: #8193a1; font-size: 10px; }
 .intro-video-card { display: grid; grid-template-columns: minmax(190px, 260px) minmax(0, 1fr); gap: 22px; align-items: center; margin-top: 19px; padding: 13px; border: 1px solid #294047; border-radius: 13px; background: linear-gradient(110deg, rgba(15, 42, 43, .54), rgba(15, 24, 34, .92)); }
-.intro-video-visual { position: relative; display: grid; min-height: 145px; overflow: hidden; place-items: center; border: 1px solid #315959; border-radius: 9px; color: inherit; background: radial-gradient(circle at 50% 48%, rgba(51, 184, 164, .23), transparent 38%), linear-gradient(145deg, #122b34, #101827 75%); text-decoration: none; }
-.intro-video-visual:hover { border-color: #66b9aa; color: inherit; text-decoration: none; }
-.video-grid-art { position: absolute; inset: 0; opacity: .53; background-image: linear-gradient(rgba(107, 204, 191, .09) 1px, transparent 1px), linear-gradient(90deg, rgba(107, 204, 191, .09) 1px, transparent 1px); background-size: 21px 21px; mask-image: radial-gradient(ellipse at center, black 10%, transparent 78%); }
-.video-eyebrow, .video-link-label { position: absolute; z-index: 1; color: #8ca9ad; font-family: var(--mono); font-size: 8px; letter-spacing: 1px; }
-.video-eyebrow { top: 13px; left: 13px; }
-.video-link-label { right: 13px; bottom: 12px; left: 13px; display: flex; justify-content: space-between; color: #a8c7c3; font-size: 7px; }
-.video-play { position: relative; z-index: 1; display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid rgba(112, 230, 210, .73); border-radius: 50%; color: #06211b; background: var(--mint); box-shadow: 0 0 32px rgba(101, 224, 205, .24); transition: transform .18s, box-shadow .18s; }
-.video-play svg { width: 19px; height: 19px; margin-left: 3px; fill: currentColor; }
-.intro-video-visual:hover .video-play { transform: scale(1.08); box-shadow: 0 0 42px rgba(101, 224, 205, .4); }
+.intro-video-player { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid #315959; border-radius: 9px; background: radial-gradient(circle at 50% 48%, rgba(51, 184, 164, .2), transparent 38%), linear-gradient(145deg, #122b34, #101827 75%); }
+.intro-video-player iframe { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border: 0; background: #0b111a; }
+.course-video-embed { margin: 0 0 24px; }
+.course-video-embed > p { margin: 8px 2px 0; color: #788d9a; font-size: 10px; }
+.course-video-embed > p a { color: var(--mint); text-decoration: none; }
+.course-video-embed > p a:hover { text-decoration: underline; }
 .intro-video-copy { padding: 4px 12px 4px 0; }
 .intro-video-copy h2 { margin: 7px 0 6px; color: #e5f0f0; font-family: var(--display); font-size: 16px; letter-spacing: -.4px; }
 .intro-video-copy p { max-width: 520px; margin: 0 0 10px; color: #90a4ad; font-size: 10.5px; line-height: 1.65; }
@@ -338,7 +335,6 @@ kbd { padding: 2px 5px; border: 1px solid #273747; border-radius: 4px; color: #7
   .hero-intro { max-width: 100%; font-size: 12px; line-height: 1.7; }
   .hero-art { right: -38px; bottom: 30px; width: 150px; opacity: .2; }
   .intro-video-card { grid-template-columns: 1fr; gap: 12px; margin-top: 13px; padding: 10px; }
-  .intro-video-visual { min-height: 145px; }
   .intro-video-copy { padding: 2px 4px 5px; }
   .intro-video-copy h2 { font-size: 15px; }
   .hero-stats { position: relative; z-index: 1; gap: 13px 17px; margin-top: 22px; }
