@@ -1,6 +1,6 @@
 # 12 · Architecture evolution and migrations
 
-[← Course home](../README.md) · [Previous: Networking & edge](11-networking-and-edge.md) · [Case studies →](../case-studies/README.md)
+[← Course home](../README.md) · [Previous: Networking & edge](11-networking-and-edge.md) · [Next: Search & recommendations →](13-search-and-recommendations.md)
 
 ## Architecture is a path, not a destination
 
@@ -125,4 +125,4 @@ An ADR captures why a decision was made, not only what the diagram looks like. R
 
 </details>
 
-[Apply the course in the case studies →](../case-studies/README.md)
+[Continue to Lesson 13 →](13-search-and-recommendations.md) · [Apply the course in the case studies](../case-studies/README.md)

@@ -22,7 +22,7 @@
 
 System design is the practice of turning a problem and its constraints into an architecture that can meet user needs. It is not a hunt for a universally “best” database, cloud, or diagram. A strong design explains **why** its components exist, **how** data moves, **what fails**, and **which trade-offs are being accepted**.
 
-This course builds those skills progressively: first learn the vocabulary and reasoning tools, then design storage, APIs, and distributed workflows, and finally apply them in complete case studies.
+This course builds those skills progressively: start with the orientation, learn 15 technical topics from first principles, then apply them in 11 end-to-end case studies and a capstone.
 
 **Start with the [course introduction video](https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing),** then continue to [Lesson 00](lessons/00-course-orientation.md) for the roadmap and learning paths.
 
@@ -47,8 +47,11 @@ flowchart LR
     J --> K[10 · Storage systems]
     K --> L[11 · Networking & edge]
     L --> M[12 · Architecture evolution]
-    M --> N[Case studies]
-    N --> O[Capstone · Your design]
+    M --> N[13 · Search & recommendations]
+    N --> O[14 · Data pipelines]
+    O --> P[15 · Cost & performance]
+    P --> Q[Case studies]
+    Q --> R[Capstone · Your design]
 ```
 
 Each lesson is self-contained and includes core concepts, diagrams, decision guidance, failure modes, and a knowledge check. The sequence matters: later architecture choices depend on earlier requirements and data guarantees.
@@ -57,9 +60,9 @@ Each lesson is self-contained and includes core concepts, diagrams, decision gui
 
 | Path | Follow | Outcome |
 |---|---|---|
-| **First pass** | 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 | A complete conceptual foundation |
+| **First pass** | 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13 → 14 → 15 | A complete conceptual foundation |
 | **Interview sprint** | 01 → 02 → 03 → 04 → 05 → 09 → case studies | A repeatable, time-boxed design method |
-| **Backend engineer** | 02 → 03 → 04 → 05 → 06 → 07 → 08 → 10 → 11 → 12 | Practical architecture and operational fluency |
+| **Backend engineer** | 02 → 03 → 04 → 05 → 06 → 07 → 08 → 10 → 11 → 12 → 14 → 15 | Practical architecture and operational fluency |
 | **Build by doing** | Lessons → [labs](labs/README.md) → [case studies](case-studies/README.md) → capstone | A portfolio-ready written design |
 
 You do not need a specific cloud provider or framework. Basic programming, HTTP, and relational database familiarity help; unfamiliar terms are introduced as needed.
@@ -81,6 +84,9 @@ You do not need a specific cloud provider or framework. Basic programming, HTTP,
 | 10 | [Storage systems and database selection](lessons/10-storage-systems.md) | Match data stores and indexes to access patterns and guarantees |
 | 11 | [Networking, DNS, and the edge](lessons/11-networking-and-edge.md) | Follow a request across DNS, TLS, proxies, and connection pools |
 | 12 | [Architecture evolution and migrations](lessons/12-architecture-evolution.md) | Evolve a system safely as teams, traffic, and constraints change |
+| 13 | [Search and recommendation systems](lessons/13-search-and-recommendations.md) | Build retrieval, indexing, ranking, and safe discovery flows |
+| 14 | [Data pipelines and stream processing](lessons/14-data-pipelines.md) | Process events with explicit time, ordering, replay, and checkpoints |
+| 15 | [Cost, capacity, and performance](lessons/15-cost-and-performance.md) | Connect workload estimates to performance budgets and unit economics |
 
 ### Case studies
 
@@ -94,6 +100,9 @@ You do not need a specific cloud provider or framework. Basic programming, HTTP,
 | File synchronization | Chunked uploads, offline changes, conflicts | [Design file sync](case-studies/file-sync.md) |
 | Rate limiter | Token buckets, distributed quotas, fail-open/closed | [Design a rate limiter](case-studies/rate-limiter.md) |
 | Web crawler | Frontier scheduling, deduplication, politeness, safe fetching | [Design a web crawler](case-studies/web-crawler.md) |
+| Ticket reservations | Waiting rooms, expiring holds, inventory correctness, payment saga | [Design ticket reservations](case-studies/ticket-reservations.md) |
+| Payment ledger | Idempotent charges, balanced entries, webhooks, reconciliation | [Design a payment ledger](case-studies/payment-ledger.md) |
+| Notification system | Consent, provider quotas, retries, priority, delivery state | [Design notifications](case-studies/notification-system.md) |
 
 Practice the [company-oriented system design question bank](INTERVIEW_QUESTION_BANK.md), with sourced public prompt examples and a reusable interviewer follow-up list. Company associations are qualified examples, not promises about what any employer currently asks.
 

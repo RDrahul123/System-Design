@@ -40,3 +40,10 @@
 | **Quorum** | Configured subset of replicas whose responses satisfy an operation rule | Any majority guarantees every desired consistency property |
 | **Tombstone** | Marker that records deletion so delayed replicas/events do not resurrect data | Removing one primary row deletes every copy immediately |
 | **Write amplification** | Physical writes caused by one logical write (indexes, replicas, projections) | API write count equals storage write work |
+| **Candidate generation** | First-stage retrieval that creates a bounded set for later ranking | One ranking model should scan the entire corpus on every request |
+| **Double-entry ledger** | Accounting representation where debits and credits balance for each posted transaction | Editing a past entry is the normal way to correct a payment |
+| **Event time** | Time a domain event happened, as distinct from processing/arrival time | Message arrival order is necessarily business order |
+| **Inverted index** | Search structure mapping terms to the documents/fields that contain them | It is automatically current or authoritative for permissions |
+| **Late event** | Event that arrives after its event-time window or expected processing point | It must be silently discarded |
+| **Watermark** | Progress estimate that a stream processor uses to decide how complete an event-time window is | Proof that no future event for that window can arrive |
+| **Unit economics** | Cost and value measured per useful business/user outcome | Minimizing one infrastructure bill always lowers total cost |

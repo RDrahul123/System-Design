@@ -18,6 +18,9 @@ These exercises are deliberately open-ended. Write assumptions before choosing c
 | 8 · Design the edge | Trace a private media download through DNS, CDN, authorization, and object storage. | Request sequence with cache-key and expiry rules |
 | 9 · Migrate without downtime | Rename a heavily used database field while old and new application versions run simultaneously. | Expand–migrate–contract rollout and rollback plan |
 | 10 · Recover from a regional outage | One region is unavailable while writes are in flight. Define failover, user behavior, and failback. | RPO/RTO, authority diagram, game-day checklist |
+| 11 · Search and ranking | A product has a canonical catalog, full-text search, typeahead, and personalized suggestions. Separate indexing, candidate retrieval, ranking, and authorization. | Projection flow, freshness objective, offline/online metrics |
+| 12 · Replay a stream | A consumer emits duplicate and late events while its sink is unavailable for 20 minutes. | Event-time policy, checkpoint strategy, idempotent replay plan |
+| 13 · Cost a critical path | Estimate compute, database work, egress, retention, and failover headroom for one user journey. | Cost-per-successful-operation model and bottleneck hypothesis |
 
 ## Capstone: design a collaborative document service
 

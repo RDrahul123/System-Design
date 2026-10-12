@@ -15,6 +15,9 @@
     { id: '10-storage-systems', number: '10', title: 'Storage systems', summary: 'Choose storage models from data shape, queries, and lifecycle needs.', group: 'Deep dives', duration: '18 min', tags: 'database sql nosql object storage search analytics index data store' },
     { id: '11-networking-and-edge', number: '11', title: 'Networking & the edge', summary: 'DNS, TLS, CDNs, proxies, connection pools, and long-lived links.', group: 'Deep dives', duration: '16 min', tags: 'network dns tls cdn edge http load balancer connection pool' },
     { id: '12-architecture-evolution', number: '12', title: 'Architecture evolution', summary: 'Modular systems, service boundaries, safe migrations, and multi-region.', group: 'Deep dives', duration: '18 min', tags: 'migration microservices monolith strangler expand contract multi region' },
+    { id: '13-search-and-recommendations', number: '13', title: 'Search & recommendations', summary: 'Indexing, retrieval, ranking, freshness, and safe discovery.', group: 'Applied systems', duration: '20 min', tags: 'search recommendation inverted index autocomplete typeahead ranking vector retrieval' },
+    { id: '14-data-pipelines', number: '14', title: 'Data pipelines & stream processing', summary: 'Batch and stream workflows, event time, replay, and checkpoints.', group: 'Applied systems', duration: '20 min', tags: 'data pipeline stream batch kafka watermark window event time replay schema' },
+    { id: '15-cost-and-performance', number: '15', title: 'Cost, capacity & performance', summary: 'Model resource demand, measure tail latency, and optimize cost.', group: 'Applied systems', duration: '18 min', tags: 'cost capacity performance load testing latency utilization throughput bandwidth' },
   ];
 
   const caseStudies = [
@@ -26,6 +29,9 @@
     { id: 'file-sync', title: 'Cloud file sync', icon: '↔', summary: 'Chunked transfers, offline changes, sharing, and version conflicts.', tags: 'dropbox drive file storage sync chunks offline conflict' },
     { id: 'rate-limiter', title: 'Distributed rate limiter', icon: '◴', summary: 'Token buckets, quotas, distributed counters, and outage policy.', tags: 'rate limit token bucket sliding window quota throttling' },
     { id: 'web-crawler', title: 'Web crawler', icon: '⌕', summary: 'Frontier scheduling, politeness, deduplication, and safe fetching.', tags: 'google crawler robots txt web search frontier deduplication indexing' },
+    { id: 'ticket-reservations', title: 'Ticket reservations', icon: '▣', summary: 'Waiting rooms, expiring holds, inventory correctness, and payment recovery.', tags: 'ticketmaster ticket booking seats flash sale inventory hold oversell queue' },
+    { id: 'payment-ledger', title: 'Payment ledger', icon: '¤', summary: 'Idempotent charges, balanced entries, webhooks, and reconciliation.', tags: 'payment stripe ledger wallet idempotency refund webhook accounting' },
+    { id: 'notification-system', title: 'Notification system', icon: '✉', summary: 'Preferences, channel providers, prioritization, and reliable delivery.', tags: 'notification email sms push fanout provider consent retry' },
   ];
   const courseIntroVideo = 'https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing';
 
@@ -113,7 +119,10 @@
     const caption = document.getElementById('progress-caption');
     if (label) label.textContent = `${count} / ${lessons.length}`;
     if (fill) fill.style.width = `${(count / lessons.length) * 100}%`;
-    if (bar) bar.setAttribute('aria-valuenow', String(count));
+    if (bar) {
+      bar.setAttribute('aria-valuemax', String(lessons.length));
+      bar.setAttribute('aria-valuenow', String(count));
+    }
     if (caption) caption.textContent = count === 0 ? 'A little learning, one lesson at a time.' : count === lessons.length ? 'Course complete. Keep designing.' : 'Your progress is saved on this device.';
     document.querySelectorAll('[data-progress-count]').forEach(el => { el.textContent = String(count); });
   }
@@ -327,7 +336,7 @@
           <h1 class="hero-title">Design systems<br />that <span class="accent">make sense.</span></h1>
           <p class="hero-intro">Go from first principles to production trade-offs. Learn to reason about scale, data, and failure—with diagrams that show how the pieces connect.</p>
           <div class="hero-actions"><a class="button-primary" href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer">Watch course introduction <span aria-hidden="true">↗</span></a><a class="button-secondary" href="${routeHref('lesson', '00-course-orientation')}" data-route="lesson:00-course-orientation">Start Lesson 00</a></div>
-        <div class="hero-stats"><div class="hero-stat"><strong>12</strong><span>guided lessons</span></div><div class="hero-stat"><strong>40+</strong><span>visual diagrams</span></div><div class="hero-stat"><strong>8</strong><span>worked case studies</span></div><div class="hero-stat"><strong>Free</strong><span>and open-source</span></div></div>
+          <div class="hero-stats"><div class="hero-stat"><strong>16</strong><span>guided lessons</span></div><div class="hero-stat"><strong>40+</strong><span>visual diagrams</span></div><div class="hero-stat"><strong>11</strong><span>worked case studies</span></div><div class="hero-stat"><strong>Free</strong><span>and open-source</span></div></div>
         </div>
         <div class="hero-art" aria-hidden="true"><img src="./assets/hero-architecture.svg" alt="" /></div>
       </section>
@@ -345,7 +354,7 @@
       </section>
 
       <section class="section-block" aria-labelledby="case-title">
-        <div class="section-heading"><div><span class="section-overline">Learn by taking systems apart</span><h2 id="case-title">Eight end-to-end designs</h2><p>Practice product, infrastructure, real-time, and data-intensive systems.</p></div><a class="text-link" href="${routeHref('page', 'case-studies')}" data-route="page:case-studies">All case studies <span>↗</span></a></div>
+        <div class="section-heading"><div><span class="section-overline">Learn by taking systems apart</span><h2 id="case-title">Eleven end-to-end designs</h2><p>Practice product, infrastructure, real-time, and data-intensive systems.</p></div><a class="text-link" href="${routeHref('page', 'case-studies')}" data-route="page:case-studies">All case studies <span>↗</span></a></div>
         <div class="case-grid">${caseStudies.map(item => `<a class="case-card" href="${routeHref('case', item.id)}" data-route="case:${item.id}"><span class="case-icon" aria-hidden="true">${item.icon}</span><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.summary)}</p><span class="case-open"><span>WORKED DESIGN</span><span>Read case →</span></span></a>`).join('')}</div>
       </section>
 
@@ -369,7 +378,7 @@
     glossary: { title: 'System design glossary', path: 'GLOSSARY.md', description: 'A shared vocabulary for the trade-offs, guarantees, and failure modes in this course.' },
     template: { title: 'Design review template', path: 'templates/design-review.md', description: 'A reusable notebook for requirements, workload, architecture, decisions, and risks.' },
     contributing: { title: 'Contributing guide', path: 'CONTRIBUTING.md', description: 'Help improve this open, vendor-neutral course.' },
-    'case-studies': { title: 'Worked system design case studies', path: 'case-studies/README.md', description: 'Compare eight architecture walkthroughs across product, infrastructure, media, marketplace, and storage systems.' },
+    'case-studies': { title: 'Worked system design case studies', path: 'case-studies/README.md', description: 'Compare eleven architecture walkthroughs across product, infrastructure, media, marketplace, storage, and transactional systems.' },
     questions: { title: 'System design interview question bank', path: 'INTERVIEW_QUESTION_BANK.md', description: 'Practice canonical prompts and company-associated examples from public interview-preparation material, with attribution caveats and follow-up questions.' },
   };
 

@@ -1,6 +1,6 @@
 # 09 · A repeatable system design interview
 
-[← Course home](../README.md) · [Previous](08-security-observability.md) · [Case studies →](../case-studies/README.md)
+[← Course home](../README.md) · [Previous](08-security-observability.md) · [Next: Storage systems →](10-storage-systems.md)
 
 ## The 45-minute structure
 

@@ -28,7 +28,7 @@ These prompts are useful across many employers. Try stating requirements and one
 |---|---|---|---|
 | Starter | Design a URL shortener / TinyURL | Unique IDs, read-heavy redirects, cache, abuse | [URL shortener](case-studies/url-shortener.md) |
 | Starter | Design an API rate limiter | Burst control, distributed counters, failure policy | [Rate limiter](case-studies/rate-limiter.md) |
-| Starter | Design a notification delivery service | Fan-out, provider retries, preferences, deduplication | [Queues & events](lessons/07-queues-and-events.md) |
+| Starter | Design a notification delivery service | Fan-out, provider retries, preferences, deduplication | [Notification system](case-studies/notification-system.md) |
 | Intermediate | Design a social news feed | Fan-out, celebrity skew, ranking, freshness | [News feed](case-studies/news-feed.md) |
 | Intermediate | Design real-time chat | Message ordering, reconnect, delivery states, presence | [Real-time chat](case-studies/real-time-chat.md) |
 | Intermediate | Design Dropbox / Google Drive | Chunked files, synchronization, conflicts, sharing | [File synchronization](case-studies/file-sync.md) |
@@ -36,12 +36,14 @@ These prompts are useful across many employers. Try stating requirements and one
 | Intermediate | Design a web crawler | Frontier scheduling, domain politeness, dedupe, retry | [Distributed web crawler](case-studies/web-crawler.md) |
 | Intermediate | Design search autocomplete | Prefix index, update pipeline, ranking, tail latency | [Storage systems](lessons/10-storage-systems.md) |
 | Advanced | Design Uber / ride matching | Geo search, location updates, exclusive match, dispatch | [Ride sharing](case-studies/ride-hailing.md) |
-| Advanced | Design ticket / seat reservation | Oversell prevention, expiring holds, payment workflow | [Reservation mini-example](lessons/09-design-interview.md) |
+| Advanced | Design ticket / seat reservation | Oversell prevention, expiring holds, payment workflow | [Ticket reservations](case-studies/ticket-reservations.md) |
 | Advanced | Design a distributed key-value store | Partitioning, replication, consistency, repair | [Distributed systems](lessons/05-distributed-systems.md) |
 | Advanced | Design a distributed message broker | Partition logs, consumer offsets, replay, ordering | [Queues & events](lessons/07-queues-and-events.md) |
 | Advanced | Design a file/object storage platform | Metadata, blobs, multipart upload, durability, deletion | [Storage systems](lessons/10-storage-systems.md) |
 | Advanced | Design a real-time leaderboard / trending service | Windowed aggregation, hot keys, approximate counts | [Estimation & workload](lessons/02-requirements-and-estimates.md) |
-| Advanced | Design a payment / wallet workflow | Ledger invariants, idempotency, reconciliation, fraud | [API & data invariants](lessons/03-api-and-data-design.md) |
+| Advanced | Design a payment / wallet workflow | Ledger invariants, idempotency, reconciliation, fraud | [Payment ledger](case-studies/payment-ledger.md) |
+| Advanced | Design search or recommendation discovery | Index freshness, candidate retrieval, ranking, privacy | [Search & recommendations](lessons/13-search-and-recommendations.md) |
+| Advanced | Design an event analytics pipeline | Event time, windows, replay, schema, sink correctness | [Data pipelines](lessons/14-data-pipelines.md) |
 | Advanced / role-specific | Design an LLM-backed retrieval service | Ingestion, retrieval, model latency/cost, privacy, evaluation | [Architecture evolution](lessons/12-architecture-evolution.md) |
 
 ## The shared follow-up bank
