@@ -198,17 +198,6 @@
     return window.DOMPurify.sanitize(html, { ADD_TAGS: ['details', 'summary'], ADD_ATTR: ['target', 'rel'] });
   }
 
-  function createCourseIntroPlayer() {
-    const frame = document.createElement('iframe');
-    frame.src = courseIntroVideo;
-    frame.title = 'System Design From First Principles — A Learner’s Roadmap';
-    frame.loading = 'lazy';
-    frame.referrerPolicy = 'strict-origin-when-cross-origin';
-    frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
-    frame.allowFullscreen = true;
-    return frame;
-  }
-
   function renderDiagrams(container) {
     const codeBlocks = [...container.querySelectorAll('pre > code.language-mermaid')];
     for (const code of codeBlocks) {
@@ -304,13 +293,11 @@
     routeMarkdownLinks(body, `lessons/${item.id}.md`);
     page.innerHTML = `<div class="reading-page"><div class="breadcrumbs"><a href="${routeHref('home')}" data-route="home">Course home</a><span class="breadcrumb-separator">/</span><span>${escapeHtml(item.group)}</span></div>
       ${readingHeader(item.number, item.title, item.summary, item.duration)}
-      ${item.id === '00-course-orientation' ? '<section class="course-video-embed" aria-label="Course introduction video"><div class="intro-video-player" id="lesson-intro-video"></div><p>Course introduction · <a href="' + courseIntroVideo + '" target="_blank" rel="noopener noreferrer">Open in Google Vids ↗</a></p></section>' : ''}
       <div class="article-slot"></div>
       <div class="article-end"><button class="mark-complete${completed.has(item.id) ? ' done' : ''}" type="button" data-complete="${item.id}" aria-pressed="${completed.has(item.id)}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8 3.1 3.1L13 4.5"/></svg><span>${completed.has(item.id) ? 'Lesson completed' : 'Mark lesson complete'}</span></button><a class="article-next" href="${nextLesson(item.id) ? routeHref('lesson', nextLesson(item.id).id) : routeHref('case', 'url-shortener')}" data-route="${nextLesson(item.id) ? `lesson:${nextLesson(item.id).id}` : 'case:url-shortener'}">${nextLesson(item.id) ? `Next: ${escapeHtml(nextLesson(item.id).title)} →` : 'Start a case study →'}</a></div>
       ${renderPrevNext(item.id)}
     </div>`;
     page.querySelector('.article-slot').replaceWith(body);
-    if (item.id === '00-course-orientation') page.querySelector('#lesson-intro-video')?.append(createCourseIntroPlayer());
     makeToc(body);
     renderDiagrams(body);
     document.title = `${item.number} · ${item.title} — System Design`;
@@ -346,8 +333,10 @@
       </section>
 
       <section class="intro-video-card" aria-label="Course introduction video">
-        <div class="intro-video-player" id="home-intro-video"></div>
-        <div class="intro-video-copy"><span class="section-overline">Start here · course introduction</span><h2>See the learning path before you begin.</h2><p>A short roadmap to the course: what system design means, how the lessons fit together, and how to get the most from the examples.</p><a href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer">Open in Google Vids if the player does not load <span>↗</span></a></div>
+        <a class="intro-video-link" href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer" aria-label="Watch System Design From First Principles — A Learner’s Roadmap in Google Vids">
+          <span class="video-grid-art" aria-hidden="true"></span><span class="video-eyebrow">THE COURSE ROADMAP</span><span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 10 6-10 6z"/></svg></span><span class="video-link-label">WATCH ON GOOGLE VIDS <span>↗</span></span>
+        </a>
+        <div class="intro-video-copy"><span class="section-overline">Start here · course introduction</span><h2>See the learning path before you begin.</h2><p>A short roadmap to the course: what system design means, how the lessons fit together, and how to get the most from the examples.</p><a href="${courseIntroVideo}" target="_blank" rel="noopener noreferrer">Watch “A Learner’s Roadmap” in Google Vids <span>↗</span></a></div>
       </section>
 
       <section class="section-block" aria-labelledby="curriculum-title">
@@ -372,7 +361,6 @@
       </section>
       <p class="home-progress-note">${count ? `You have completed <strong>${count}</strong> of ${lessons.length} lessons on this device.` : 'Your course progress is saved privately in this browser when you mark a lesson complete.'}</p>
     </div>`;
-    page.querySelector('#home-intro-video')?.append(createCourseIntroPlayer());
     document.title = 'System Design — From First Principles';
   }
 

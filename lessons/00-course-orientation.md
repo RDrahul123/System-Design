@@ -4,7 +4,7 @@
 
 ## Start here: course introduction
 
-Before the first lesson, watch the embedded course roadmap above: **[System Design From First Principles — A Learner’s Roadmap ▶](https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing)**. It introduces the course and how to approach the learning path. If the embedded player is unavailable, open the video directly in Google Vids.
+Before the first lesson, watch the course roadmap: **[System Design From First Principles — A Learner’s Roadmap ▶](https://docs.google.com/videos/d/15kJjGC8OyHCujioJoT_r3xM69kETwXy85pg1QYZWatI/play?usp=sharing)**. It introduces the course and how to approach the learning path. The link opens the video in Google Vids.
 
 ## What “system design” means here
 
