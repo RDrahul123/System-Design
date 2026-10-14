@@ -163,4 +163,14 @@ Clients need to distinguish validation errors, authentication/authorization fail
 
 </details>
 
+## Worked example: make reservation retries safe
+
+A client asks to reserve seat `A17` and times out before receiving the response. The server may have committed the reservation even though the client does not know it. Retrying a plain `POST /reservations` could create a second hold or charge; asking the client not to retry does not resolve the uncertainty.
+
+Give the operation an idempotency key scoped to the authenticated customer and operation. In one transaction, record the key, a hash of the normalized request, and the resulting reservation identifier alongside the inventory transition. A repeat with the same key and same request returns the original result. Reusing the key with a different seat is a conflict, not a second interpretation of the request. The unique constraint and conditional inventory update must be enforced by the authoritative store, not by a read-then-write check in application memory.
+
+Define the key's retention period from the maximum supported client retry and recovery window. Keep enough durable outcome information that an old retry cannot accidentally become a new reservation after the idempotency record expires.
+
+**Design drill:** write the success, timeout-after-commit, timeout-before-commit, and same-key/different-body responses. Then identify which database constraint makes each response safe under concurrent requests.
+
 [Continue to Lesson 04 →](04-scaling-and-caching.md)

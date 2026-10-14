@@ -144,4 +144,14 @@ If GitHub’s Mermaid renderer changes chart support, the intended takeaway is s
 
 </details>
 
+## Worked example: turn a product prompt into a workload
+
+Consider a photo library with 2 million daily active users. Assume, for a first estimate, that each user uploads 4 photos per day and views 20. That is 8 million uploads and 40 million views per day. Dividing by 86,400 gives roughly 93 uploads/s and 463 views/s on average; a 5x peak factor would put the planning peak near 465 uploads/s and 2,315 views/s. These are assumptions to validate, not capacity guarantees.
+
+Continue the estimate along the data path. If an original averages 4 MB, original uploads add about 32 TB/day before replicas, thumbnails, metadata, and retention. If each upload creates three 200 KB thumbnails, derivatives add about 4.8 TB/day. State whether sizes are decimal or binary, whether compression is included, and how long each object is retained.
+
+Now make the estimate useful: separate upload bytes from thumbnail reads, distinguish average from burst, and identify the first constrained resource. A CDN may absorb repeated thumbnail reads but does not reduce original-upload ingress or metadata writes. Repeat the calculation with half and double the assumptions to find which uncertain inputs materially change the design.
+
+**Review check:** every number needs a unit, a time basis, and a source label: known requirement, measured value, or explicit assumption.
+
 [Continue to Lesson 03 →](03-api-and-data-design.md)

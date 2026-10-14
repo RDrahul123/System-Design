@@ -125,4 +125,14 @@ An ADR captures why a decision was made, not only what the diagram looks like. R
 
 </details>
 
+## Worked example: change a live schema without a flag day
+
+Suppose an application stores a user's display name in `name` and must move to `display_name`. Deploying new code that reads only the new column before old rows are copied creates missing values; dropping the old column while an older application instance is still running breaks that instance.
+
+Use an expand-migrate-contract sequence. First add the new nullable field and deploy code that can read both forms while writing a consistent value to both. Backfill in bounded batches, making the job idempotent and observable; compare counts and sampled values rather than assuming completion from a job's exit code. Switch reads to the new field behind a measured rollout. Keep the old field during the rollback window, then stop dual writes and remove it only after all application versions and consumers have moved.
+
+Define which field is authoritative at each stage. If concurrent updates are possible during backfill, use a version or conditional update so the backfill cannot overwrite a newer user edit. Rollback must be tested against the intermediate schema, not just the initial and final states.
+
+**Design drill:** list the schema and application versions that may coexist at each deployment stage, then verify that every pair can read and write safely.
+
 [Continue to Lesson 13 →](13-search-and-recommendations.md) · [Apply the course in the case studies](../case-studies/README.md)

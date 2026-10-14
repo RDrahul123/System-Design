@@ -112,3 +112,13 @@ Measure pages/s and bytes/s, frontier age by domain, queue eligibility delay, du
 5. How do you comply with a host removal request after content was indexed and copied?
 
 **Key lesson:** globally scale workers while keeping domain-level behavior polite. Global throughput and per-host fairness are separate control loops.
+
+## Pressure test: an untrusted URL targets internal infrastructure
+
+A page contains a link to a private IP address, a cloud metadata endpoint, or a hostname that resolves to a private address only after a redirect. A crawler that validates only the submitted hostname can be tricked into making requests from a trusted network to internal services.
+
+Treat every discovered URL and every redirect as untrusted. Resolve and validate the destination at fetch time, reject loopback, link-local, private, and otherwise disallowed address ranges, and ensure the actual connection uses the validated address rather than resolving the hostname again without checks. Apply the same policy after each redirect and defend against DNS rebinding. Restrict schemes and ports, cap response size and redirect depth, and isolate renderers that execute page scripts from credentials and internal networks.
+
+Politeness is another independent control: maintain per-origin concurrency and delay even when a large crawl fleet is available. A global worker pool must not overwhelm one host. Record the rejection reason without fetching or logging sensitive response bodies.
+
+**Review prompt:** can a redirect or DNS answer change between validation and connection, and which network boundary prevents a failed application-level check from reaching internal services?

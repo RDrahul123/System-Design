@@ -112,4 +112,14 @@ Plan normal peak and degraded peak separately. If three regions normally serve 3
 
 </details>
 
+## Worked example: optimize cost per successful upload
+
+For a photo upload, count the resources consumed by a successful user outcome: API compute, metadata transactions, original and thumbnail bytes, queue work, storage retention, and delivery egress. Divide the total by completed uploads, not attempted requests; retries and failed work still consume resources and should remain visible in the numerator.
+
+Suppose a new thumbnail format reduces stored bytes but increases encoding CPU. Estimate the trade before rollout, then measure both storage cost and encode time at representative image sizes. If encoding pushes queue age past the freshness objective, the apparent storage savings may degrade the product or require more worker capacity. A cost improvement is useful only while correctness, latency, availability, and quality remain inside their budgets.
+
+Find the constrained resource from measurements: utilization, queue depth, saturation, and p95/p99 latency by operation. Test realistic payload sizes and burst patterns, and include warm-up, cache misses, and dependency limits. Scale headroom should reflect recovery time and failure scenarios, not an arbitrary utilization target.
+
+**Review check:** state the cost unit, included resources, quality guardrails, measurement window, and rollback signal before recommending the optimization.
+
 [Apply these tools in the case studies →](../case-studies/README.md)

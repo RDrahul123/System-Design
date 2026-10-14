@@ -72,3 +72,13 @@ Monitor allow/reject rates by bounded policy/route labels, counter-store latency
 4. How does policy change propagate while preserving the intended quota window?
 
 **Key lesson:** “rate limit” is a policy plus an algorithm plus a failure mode. Explain burst semantics, state ownership, and availability behavior before choosing a counter store.
+
+## Pressure test: a regional limiter loses shared state
+
+An API has both a per-account quota and a global protection limit. A region loses access to the shared counter store during a burst. If every gateway fails open, the global protection limit disappears exactly when the service may need it most; if every gateway fails closed, legitimate traffic can be rejected despite healthy application capacity.
+
+Separate the product quota from the overload-protection control. For a product quota, define whether a bounded local allowance is acceptable during partition and how that allowance is reconciled. For a safety limit, a conservative local ceiling may protect the dependency even if users see temporary throttling. Allocate tokens or budget to gateways with explicit leases and expiry if temporary local enforcement is used; avoid giving every restarted gateway a fresh full quota.
+
+Return a clear retry signal and use a stable time window or token-bucket policy so clients can behave predictably. Monitor rejected requests, counter-store health, local fallback use, and post-recovery reconciliation without high-cardinality user identifiers.
+
+**Review prompt:** for each quota, say whether it fails open or closed, the maximum overshoot during a partition, and who owns the authoritative limit.

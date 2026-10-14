@@ -125,4 +125,14 @@ An event is a fact that happened, not necessarily a command telling a consumer w
 
 </details>
 
+## Worked example: close the database-to-event gap
+
+An order service updates an order row and then publishes `OrderCreated`. If it commits the row and crashes before publishing, downstream billing or fulfillment never learns about the order. Reversing the order creates the opposite failure: an event can be published for a transaction that later rolls back.
+
+Write the order change and an outbox record in the same database transaction. A relay reads committed outbox rows and publishes them, then records delivery progress. A crash after publish but before recording progress can publish the event again, so consumers still need idempotency. Give each event a stable ID and have the consumer transactionally record that ID with its state change. Keep event publication at least once and make the effects safe to repeat rather than claiming exactly-once delivery across independent systems.
+
+Track the age and count of unpublished rows, relay errors, consumer lag, and poison-message rate. Define how operators replay a corrected event and how old schema versions remain readable during rollout. Retention must exceed the recovery and replay window.
+
+**Design drill:** walk through a crash before commit, after commit but before publish, and after publish but before acknowledgement. For every case, identify the durable evidence and whether replay is safe.
+
 [Continue to Lesson 08 →](08-security-observability.md)

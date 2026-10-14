@@ -117,4 +117,14 @@ Map where every copy flows: primary, replicas, cache, search, event log, analyti
 
 </details>
 
+## Worked example: a photo product needs more than one storage model
+
+Store photo metadata such as owner, capture time, visibility, and object version in a relational store when the product needs transactions and queries across those fields. Store original image bytes and generated thumbnails in object storage; keep their durable object identifiers and checksums in metadata rather than treating a filesystem path as the product contract.
+
+Build search and analytics as derived projections from the authoritative metadata and event stream. They can be rebuilt, but they may lag. That means search results must be re-authorized against current access rules before returning a private object, and deletion must propagate to thumbnails, search indexes, caches, and retained backups according to a stated policy. A successful metadata delete is not proof that every copy has disappeared.
+
+For each store, write down the access pattern, consistency need, retention period, owner, and recovery method. The decision is not “SQL versus NoSQL”; it is which store can enforce each invariant at the boundary where that invariant matters, and how derived copies are repaired when they drift.
+
+**Design drill:** trace upload, thumbnail creation, search, permission change, and deletion. Mark the source of truth for each state transition and how you detect a stale projection.
+
 [Continue to Lesson 11 →](11-networking-and-edge.md)

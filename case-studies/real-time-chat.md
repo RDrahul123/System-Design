@@ -146,3 +146,13 @@ Monitor accepted-message latency, write conflicts, duplicate retry rate, per-con
 Order within a conversation is often enough; push may be lost while a stored message can be replayed; per-device cursors or a clearly defined user-level read cursor are needed; message bodies and keys require a threat-model-specific encryption and logging policy.
 
 </details>
+
+## Pressure test: a client retries after losing the send acknowledgement
+
+A client sends message `M`, the server stores it and assigns conversation sequence 84, but the acknowledgement is lost. The client reconnects and retries. If the server creates a new message at sequence 85, recipients see a duplicate even though the original operation succeeded.
+
+Assign a stable client message ID and scope it to the sender and conversation. Enforce uniqueness at the durable write boundary and return the original server message and sequence on a duplicate retry. Persist the message before acknowledging it; push notification is a delivery hint, not the message source of truth. On reconnect, the client resumes from a durable cursor and fetches missed messages, deduplicating by message ID.
+
+Define ordering per conversation, not as a promise of global order across all conversations. If sequence allocation is partitioned by conversation, a hot conversation may become a serialization point; that is a deliberate trade-off for a comprehensible order. Keep presence ephemeral and separate from durable message history so a presence-store outage does not lose messages.
+
+**Review prompt:** which server record lets a client distinguish “stored but acknowledgement lost” from “never stored,” and how long is that deduplication state retained?

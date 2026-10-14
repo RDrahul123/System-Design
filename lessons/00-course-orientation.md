@@ -59,4 +59,18 @@ Use the beginner path if terms like replica, cache, or queue are new. If you alr
 
 </details>
 
+## Practice: turn a lesson into a design decision
+
+Use a small feature you understand, such as saving a draft, as your running example. In one study session:
+
+1. Write down the user action and the observable result. Keep implementation choices out of this statement.
+2. Name the state that must survive a restart and the invariant that must never be violated.
+3. Sketch the simplest request path, including the caller, the authoritative state, and the response.
+4. Pick one quality target and define where and how it would be measured.
+5. Change one assumption, such as losing the database connection after a write, and explain what the user sees and how the system recovers.
+
+Beginners can focus on the request path and one failure. Experienced engineers should add a measurable workload, identify the likely bottleneck, and state what evidence would justify a new component. Keep the first sketch: comparing it with the revised design makes your reasoning visible.
+
+**A useful checkpoint:** you should be able to explain each box, arrow, and data store in terms of a requirement, an invariant, or an operational need. If you cannot, remove it or state the assumption that would make it necessary.
+
 [Continue to Lesson 01 →](01-mental-models.md)

@@ -132,3 +132,13 @@ Suppose an owner disables a malicious link. If the redirect cache uses a 10-minu
 ## 10. Operational signals
 
 Measure redirect p50/p95/p99 by region, status code and cache-hit class; mapping-store latency and saturation; hot-key request distribution; expired/disabled link hit count; creation collision retries; and analytics queue age. Keep labels bounded—do not use the raw short code as a metric label. Sample or aggregate click analytics independently.
+
+## Pressure test: a popular link is disabled while cached
+
+A short URL becomes popular and its destination is cached at many edges. The owner then disables it because the destination is unsafe or the link was created by mistake. A long cache TTL keeps returning the old redirect even after the authoritative mapping changes.
+
+Make the allowed disable delay an explicit product and abuse-response requirement. Use short-lived redirect entries, targeted invalidation, or a revocation/version check for cases that need faster action. The origin mapping remains authoritative, and cache invalidation failure must be visible. For a high-traffic key, invalidation can itself create a thundering herd, so protect the mapping store with request coalescing and bounded refresh.
+
+Keep analytics asynchronous and independent of redirect correctness. A redirect should not wait for a click-event write, and metrics should aggregate by bounded dimensions rather than raw short code. Separate a disabled mapping from a missing mapping so clients and operators can distinguish policy from absence without leaking sensitive destination details.
+
+**Review prompt:** what is the maximum time a disabled URL can still redirect, and how is that bound maintained during an edge-control-plane outage?

@@ -122,4 +122,14 @@ Use offline replay for candidate/ranking changes and controlled online experimen
 
 </details>
 
+## Worked example: search is a projection, authorization is current
+
+When a user searches for a document, the search index can quickly retrieve candidates using token matches, filters, and ranking. That index is often updated asynchronously from the canonical document store, so a candidate may have stale title text, outdated visibility, or a document that has already been deleted.
+
+Treat retrieval and authorization as separate steps. Retrieve a bounded candidate set, then verify each candidate against the current access policy before returning a snippet or link. Do not assume that an index filter is a security boundary unless it has the required freshness and failure guarantees. If authorization checks are unavailable, choose an explicit policy: fail closed for private content rather than exposing a stale result.
+
+Measure indexing lag, query latency, zero-result rate, and relevant-result quality separately. A result can be fast but stale, fresh but poorly ranked, or relevant but unauthorized. Rebuild and replay paths should use versioned documents or tombstones so an old event cannot resurrect deleted content.
+
+**Review check:** trace create, update, permission change, delete, reindex, and query. For every step, say which data is eventually consistent and which decision must use current authoritative state.
+
 [Continue to Lesson 14 →](14-data-pipelines.md)
