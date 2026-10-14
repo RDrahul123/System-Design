@@ -124,3 +124,13 @@ Keep large bytes outside the relational catalog. Playback position is a checkpoi
 5. If video egress costs dominate, which levers (bitrate, codec, caching, catalog policy) can reduce cost without unacceptable quality loss?
 
 **Key lesson:** media delivery is dominated by moving bytes efficiently. Keep control-plane APIs and media data-plane delivery separate, then design authorization and cache behavior together.
+
+## Pressure test: a new release causes a cache-fill storm
+
+A popular title launches globally. Many viewers request the same first segments at once, but those segments are not warm in every region. If each edge miss independently downloads from origin, the release can saturate origin bandwidth and delay both new and existing playback.
+
+Plan cache warming for the most likely initial segments, but treat it as an optimization rather than a correctness dependency. Use request coalescing at the edge or regional origin so concurrent misses for the same immutable segment share a fetch. Keep segment names versioned by encoded asset so a manifest never points to bytes that are being replaced in place. Protect origin with concurrency limits and prioritize active playback over speculative prefetch.
+
+Adaptive bitrate selection should respond to measured delivery throughput and buffer health, not only the viewer's nominal connection type. Monitor startup time, rebuffer ratio, cache-hit ratio, origin egress, and rendition switches together; a cache improvement that serves the wrong or unauthorized version is not a success.
+
+**Review prompt:** how does the system behave when prewarming is incomplete and one origin region is unavailable during the launch spike?

@@ -118,4 +118,14 @@ Architectures contain feedback loops: autoscaling observes load and starts capac
 
 </details>
 
+## Worked example: a slow multi-step request
+
+Suppose a page request calls six independent services in parallel and must return within 100 ms. Even if each dependency meets 100 ms 99% of the time, and their latencies are independent, the chance that all six meet that threshold is about 0.99^6, or 94%. Real dependencies are often correlated, so shared saturation can make the tail worse.
+
+Trace the critical path rather than summing every duration: parallel calls contribute the slowest required branch, while sequential calls add their durations. Then identify which branches are essential to the response. A product decision might allow a stale recommendation or omit an optional badge when its deadline expires, while still requiring current authorization and account state.
+
+Measure end-to-end latency and per-dependency latency with the same trace identifier. Set a deadline budget for each required branch, propagate the remaining deadline, and avoid retrying a slow dependency when there is no time left for a useful result. This is a whole-journey decision: optimizing a fast non-critical call will not improve the user's tail latency.
+
+**Design drill:** mark every request edge as required or optional, synchronous or asynchronous, and critical-path or off-path. For each optional edge, define the fallback; for each required edge, define its timeout and user-visible failure.
+
 [Continue to Lesson 02 →](02-requirements-and-estimates.md)

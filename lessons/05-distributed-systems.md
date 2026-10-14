@@ -102,4 +102,14 @@ A timeout cannot distinguish a crashed server from a slow network or a long paus
 
 </details>
 
+## Worked example: a timeout does not tell you whether a write happened
+
+A service sends `CreateOrder` to a remote dependency and receives no response before its deadline. Two histories are consistent with that observation: the remote side never committed the order, or it committed and the reply was lost. The caller cannot safely infer either outcome from the timeout alone.
+
+Represent the operation with a stable identifier and make the receiver deduplicate that identifier durably. On retry, the receiver returns the original outcome instead of repeating the side effect. If the receiver cannot provide idempotency, add a query or reconciliation path that can discover the result before another attempt. A short-lived in-memory deduplication cache is insufficient if retries can outlive a process restart.
+
+Keep the timeout and retry policy bounded. Use backoff and jitter to avoid synchronized retry waves, propagate the original deadline, and distinguish a retryable transport error from a definitive business rejection. The end-to-end guarantee depends on every boundary preserving the identifier and outcome; a single non-idempotent downstream call can still duplicate work.
+
+**Design drill:** draw the two possible histories, label what each participant knows, and mark the durable record that resolves the ambiguity. Then state the behavior if that record is unavailable.
+
 [Continue to Lesson 06 →](06-reliability.md)

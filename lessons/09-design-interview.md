@@ -108,4 +108,14 @@ The payment provider call uses a stable idempotency key. If the API times out af
 
 This small example demonstrates that correctness requirements should determine the architecture before the scale estimate does. A queue is useful for expiry and payment follow-up, but it must not become the authority for whether a seat is still available.
 
+## Worked example: spend the interview's time on evidence
+
+For a 45-minute ticket-reservation prompt, use the opening minutes to clarify whether seats are assigned, how long a hold lasts, and whether overselling is acceptable. Write the invariant plainly: a seat has at most one active reservation. Estimate the sale burst and identify the scarce resource before drawing a queue, cache, or database.
+
+Present a baseline path: admission control, an authoritative conditional inventory update, a time-bounded hold, and a payment workflow with an explicit unknown-outcome recovery. Then choose one deep dive based on the risk in the prompt. For strict inventory correctness, explain the transaction and its concurrency boundary; for a sudden sale spike, explain how admission smoothing protects that boundary. Do not spend the same time detailing every component.
+
+Reserve the final minutes to walk one failure through the design, name the trade-off, and state what evidence would change your choice. For example, a waiting room controls arrival rate but does not itself prove that a seat cannot be allocated twice.
+
+**Self-review:** could an interviewer point to a requirement, estimate, invariant, or failure that justifies each major box? If not, simplify the diagram or make the missing assumption explicit.
+
 [Continue to Lesson 10 →](10-storage-systems.md) · [Go to labs and capstone →](../labs/README.md)

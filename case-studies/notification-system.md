@@ -96,3 +96,13 @@ Render templates with escaped/untrusted fields, track template version, and prev
 4. How do you make notification replay safe after changing a template?
 
 **Key lesson:** notification fan-out is a policy and delivery workflow, not just a queue. Separate priority, consent, provider capacity, and delivery evidence.
+
+## Pressure test: consent changes after a message is queued
+
+A marketing email is queued while the recipient is subscribed. The recipient unsubscribes before a provider worker sends it. A consent check only at enqueue time is stale by the time the external side effect occurs.
+
+Keep consent and suppression state authoritative and re-evaluate eligibility as close as practical to dispatch. Record the policy version and decision for audit, but avoid storing message content or personal data in broad operational logs. Coordinate the final check with the provider call: there may still be a small race if the user opts out after the check but before the provider accepts the request. State that boundary honestly and use provider suppression controls where available.
+
+If the worker times out after the provider may have accepted the message, do not blindly retry a send that could be duplicated. Use provider idempotency or delivery-status lookup when supported; otherwise represent the outcome as unknown and reconcile it. Keep unsubscribe handling fast, prioritized, and independent of a backlogged marketing queue.
+
+**Review prompt:** which event is the consent authority, how quickly does an unsubscribe take effect, and what evidence is retained for a disputed send?

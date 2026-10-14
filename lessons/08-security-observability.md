@@ -134,4 +134,14 @@ During an incident, distinguish mitigation from root-cause repair. Capture a tim
 
 </details>
 
+## Worked example: trace a private download without leaking it
+
+A user requests a private photo through a CDN. The browser is authenticated to the application, but the CDN may not share that session. The application must authorize the user's access before issuing a short-lived signed URL or equivalent capability. The capability should be scoped to the object and action, expire quickly enough for the product's needs, and avoid exposing a reusable account credential.
+
+Decide how cache keys treat authorization. If the CDN caches a private response under a URL that does not distinguish authorized access, one user's content could be served to another. A signed URL can act as a cache key, but its expiry, revocation delay, and logging exposure become part of the security model. Do not put private tokens into analytics, referrer headers, or unredacted request logs.
+
+Trace the request with a non-sensitive correlation ID. Record the authorization decision, policy version, object class, and outcome, but not the image bytes or bearer secret. Alert on abnormal denial or access patterns while keeping labels bounded and retaining sensitive audit data only as long as justified.
+
+**Review check:** follow identity, authorization, cache behavior, logs, and deletion through the entire path. A secure API boundary is not enough if a downstream cache or telemetry sink changes the trust boundary.
+
 [Continue to Lesson 09 →](09-design-interview.md)

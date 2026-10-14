@@ -103,4 +103,14 @@ Validate required IDs, timestamps, units, and schema version. Prefer determinist
 
 </details>
 
+## Worked example: late events and replay in a streaming pipeline
+
+Suppose a trip event is created at 10:00 but a mobile device reconnects and delivers it at 10:12. A dashboard that groups by arrival time puts it in the wrong interval; a pipeline using event time can place it in the 10:00 window, but must decide how long to wait before finalizing that window.
+
+Choose a lateness allowance from the product's freshness requirement and observed delivery delays. A watermark is an estimate that earlier event-time data is unlikely to arrive, not proof that no late event exists. Define what happens after the watermark: drop the event, emit a correction, or update a restatable result. Keep a durable event ID so replay can be idempotent, and checkpoint both source offsets and sink progress in a way that avoids losing or double-applying changes.
+
+Monitor event-time lag, processing lag, late-event rate, checkpoint age, and sink errors separately. If a sink is unavailable for 20 minutes, bound the backlog, preserve source data for replay, and confirm that recovery throughput can catch up without starving live traffic.
+
+**Design drill:** specify the window, watermark policy, correction behavior, deduplication key, and replay horizon. Then test a duplicate event that arrives both before and after the checkpoint.
+
 [Continue to Lesson 15 →](15-cost-and-performance.md)

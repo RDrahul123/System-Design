@@ -115,3 +115,13 @@ If a user changes a post from public to private, a stale feed entry must not lea
 Measure fan-out write cost against read-time merge cost; deduplicate by viewer and post; use a stable snapshot/version or define pagination semantics across ranking changes; tombstone or filter at serving time and asynchronously clean derived entries.
 
 </details>
+
+## Pressure test: a post is hidden while fan-out is still running
+
+A creator publishes a post that is fanned out to follower timelines. Shortly afterward, the creator changes its audience or blocks a viewer. Some feed entries may already be materialized, and others may still be queued. Deleting only the canonical post does not guarantee that every derived copy disappears before the next read.
+
+Treat the post's current visibility policy as authoritative at serving time. Fan-out workers should recheck or carry a policy version so stale work cannot create indefinitely visible entries. The feed read path must filter candidates against current authorization before returning content or snippets; asynchronous cleanup then removes stale copies and reduces wasted storage. This adds read cost and a freshness dependency, so define the acceptable delay and fail-closed behavior for private content.
+
+Use stable post IDs and cursor semantics that tolerate filtering: a page may contain fewer results than requested, and the client may need a continuation cursor that advances over filtered entries without skipping later visible items. Measure authorization-filter rate and cleanup lag.
+
+**Review prompt:** how quickly must a visibility change take effect, and which synchronous check enforces that promise while materialized feeds catch up?

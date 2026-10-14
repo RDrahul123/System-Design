@@ -100,4 +100,14 @@ For each critical dependency, document detection, who owns the decision, safe de
 
 </details>
 
+## Worked example: convert an availability goal into an operating decision
+
+Suppose a service promises 99.9% successful requests over a rolling 30-day window. That leaves about 43 minutes of failed-request budget in the window, but the number is meaningful only after defining which requests count, which regions are included, how synthetic traffic is treated, and whether latency failures count as failures.
+
+Use a request-based service-level indicator, such as the fraction of eligible requests that succeed within the latency objective. Alert on a burn rate that can exhaust the budget before the measurement window ends; a monthly summary alone is too late to protect users. When the budget is being spent quickly, pause risky releases, reduce nonessential work, or focus engineering on the dominant failure mode. An availability target does not mean every dependency needs the same target: prioritize the critical user journey and its failure domains.
+
+Pair the objective with a recovery design. For a durable data service, specify backup frequency, restore time, and the amount of recent data that may be lost. A successful backup job is not proof of recoverability; restore it and measure the result.
+
+**Review check:** name the user-visible SLI, its population and window, the alert action, and the tested recovery procedure. If one is missing, the objective is not yet operational.
+
 [Continue to Lesson 07 →](07-queues-and-events.md)

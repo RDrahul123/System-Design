@@ -117,3 +117,13 @@ Compare ticket ledger, inventory rows, and payment provider settlement records. 
 5. How do you prove no oversell after an ambiguous payment timeout or regional failover?
 
 **Key lesson:** smoothing demand is not the same as controlling inventory. Make the allocation transaction authoritative; make queueing, payment, and notifications recoverable around it.
+
+## Pressure test: payment succeeds after the hold expires
+
+A customer obtains a seat hold, then the payment provider takes longer than the hold duration. The hold expires and the seat is offered to another customer; the original payment later succeeds. Extending every hold indefinitely would strand scarce inventory, while automatically treating a late charge as a confirmed ticket can oversell the event.
+
+Model hold, payment attempt, and reservation as separate state machines linked by stable IDs. When payment success arrives, atomically confirm only if the hold is still valid and inventory is still allocated to that customer. If not, initiate a defined compensation path, such as voiding or refunding the charge, and keep the order in a state that support and reconciliation can explain. Provider timeouts remain unknown until resolved; do not infer failure from silence.
+
+Use an outbox or durable workflow record to retry compensation and notify the customer. Track expired holds with pending payments, time-to-resolution, and refund completion. The waiting room controls admission rate; it does not replace the inventory transaction or payment recovery.
+
+**Review prompt:** which component owns the final confirmation, and what durable evidence proves that a late payment is compensated exactly once?

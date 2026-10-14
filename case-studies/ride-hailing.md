@@ -109,3 +109,13 @@ Track location age distributions, updates accepted/dropped, candidate count per 
 4. How do offline drivers recover their availability and current-trip state after reconnect?
 
 **Key lesson:** approximate geo search is acceptable; exclusive assignment is not. Keep volatile location state and durable ride state separate, and make the state transition authoritative.
+
+## Pressure test: two dispatchers offer the same driver
+
+Two dispatch workers search nearby-driver indexes at nearly the same time and both see driver D as available. A location index is optimized for freshness and proximity, but its result is only a candidate list; it cannot safely grant an exclusive ride assignment.
+
+Make the durable ride state transition authoritative. Each worker attempts a conditional assignment from `searching` to `offered` only if the ride is still eligible and the driver has no active assignment. Enforce the uniqueness or lease constraint in the store that owns dispatch state. The loser reloads current state and offers another candidate. Keep the offer expiry and acceptance transition in the same state machine so a late response cannot revive an expired offer.
+
+Location updates can be delayed or reordered. Attach a monotonic sequence or server-received timestamp, reject stale updates, and let an assigned driver remain authoritative for trip state even if the geo index temporarily shows an old location. Measure candidate age and assignment conflicts, then tune the freshness window against mobile battery and network behavior.
+
+**Review prompt:** what happens if the worker crashes after reserving the driver but before notifying the driver, and how does the lease recover without assigning two rides?

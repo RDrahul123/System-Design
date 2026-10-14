@@ -92,4 +92,14 @@ Use TLS across untrusted networks and consider service identity for east-west ca
 
 </details>
 
+## Worked example: cache private media without making it public
+
+A browser requests a protected video segment. DNS resolves the playback hostname; TLS authenticates the endpoint; the request reaches an edge location, where a cache lookup may happen before origin work. The authorization mechanism must therefore be available at the edge or represented by a narrowly scoped signed capability that the edge can validate.
+
+Define the cache key from every dimension that changes the representation or access decision, such as asset version, permitted rendition, and authorization scope. Avoid including arbitrary headers that fragment the cache, but never collapse two users into one cache entry when their access differs. Set a bounded capability lifetime and define what happens when access is revoked before it expires. If the product requires immediate revocation, a long-lived cacheable token is the wrong contract.
+
+On a miss, the edge should fetch only from the intended origin and respect origin deadlines. Monitor cache-hit ratio alongside origin request rate, egress, and authorization failures; a high hit ratio alone does not prove correctness. Test both a valid user and a user without permission against a warmed cache.
+
+**Review check:** write the cache key, token scope, expiry, revocation behavior, and origin fallback in one place. These are one end-to-end design, not separate CDN settings.
+
 [Continue to Lesson 12 →](12-architecture-evolution.md)

@@ -100,3 +100,13 @@ Measure upload bytes/sec, active multipart sessions, abandoned-part storage, che
 4. How do you migrate chunking size or encryption keys without forcing a full re-upload?
 
 **Key lesson:** file synchronization is a metadata/change-propagation problem plus a large-object transfer problem. Model them separately and make conflict semantics explicit.
+
+## Pressure test: an offline edit races with deletion
+
+Device A edits version 12 of a document while offline. Device B deletes that document, and the deletion reaches the server first. When A reconnects, accepting the edit as a normal update would silently resurrect content the user deliberately removed; rejecting it without explanation can discard A's work.
+
+Represent deletion as a versioned tombstone rather than immediately erasing all coordination metadata. Compare the edit's base version with the current version and apply the product's explicit conflict policy: preserve the offline edit as a recoverable conflict copy, or reject it and explain that the document was deleted. Do not overwrite the tombstone based only on a newer client timestamp; device clocks are not an authority. Once all supported devices have advanced beyond the tombstone and retention rules permit cleanup, garbage-collect it.
+
+Make the response idempotent so a device retry after a lost acknowledgement receives the same conflict result. The design must separately define access revocation, conflict-copy visibility, and eventual physical data deletion.
+
+**Review prompt:** what durable state proves that every device has observed the delete, and what happens if a device stays offline beyond the tombstone-retention period?

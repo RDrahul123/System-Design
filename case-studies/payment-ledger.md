@@ -105,3 +105,13 @@ Metrics: authorization/capture success by provider and merchant tier, unknown-ou
 5. Which reports are derived from ledger truth, and how are they rebuilt?
 
 **Key lesson:** payments combine an externally controlled side effect with an internally auditable ledger. Model unknown outcomes and reconciliation as first-class paths.
+
+## Pressure test: the payment provider times out after charging
+
+The checkout service sends a charge request and times out. The provider may have declined it, may still be processing it, or may have charged the customer and lost the response. Marking the order failed and issuing a new charge can double-charge; marking it paid without evidence can ship an unpaid order.
+
+Persist a payment attempt with a stable merchant idempotency key before the external call. Keep the order in a pending or unknown state until a provider response, webhook, or reconciliation query establishes the outcome. A repeated webhook must be deduplicated by provider event identity, while out-of-order events must be checked against the payment state machine rather than applied as unconditional status updates.
+
+When a charge is confirmed, post balanced ledger entries in one local transaction and link them to the provider reference. Reconciliation compares provider settlement evidence with internal attempts and ledger entries; it should surface differences for investigation instead of silently rewriting history. Refunds and reversals are new entries, not edits to a posted financial record.
+
+**Review prompt:** what evidence is sufficient to transition from unknown to paid, and how does the system recover if both the webhook and the synchronous response are lost?

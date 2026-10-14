@@ -139,4 +139,14 @@ flowchart TD
 
 </details>
 
+## Worked example: a cache hides the average and exposes a hot key
+
+Imagine 100,000 documents receive 10 million reads per hour. A uniform workload averages 100 reads per document per hour, but real traffic may concentrate on a few popular documents. A single hot key can overload one cache shard or origin partition even when fleet-wide CPU and average request rate look healthy.
+
+First measure the key-frequency distribution and cache-hit ratio by bounded key class, not by logging every raw key as a metric label. Compare origin load for hot and cold traffic. If one immutable public document dominates, a longer TTL or edge cache may help. If it is frequently edited, define the acceptable stale window and invalidation behavior before extending the TTL. Replicating a hot value across cache nodes can spread reads, but creates more copies to refresh and can cause a synchronized miss when they expire together.
+
+Protect the origin during a cold start with request coalescing or a bounded refresh path; otherwise many concurrent misses can turn a cache outage into an origin outage. A cache is a derived copy, so the source of truth must still handle misses and stale entries correctly.
+
+**Review check:** specify the expected behavior for a miss, an expired value, an invalidation delay, and a cache-node failure before calling the cache a scaling solution.
+
 [Continue to Lesson 05 →](05-distributed-systems.md)
